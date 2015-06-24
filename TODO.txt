@@ -1,0 +1,2 @@
+- Load items dynamic from AJAX using JQuery or Anuglar etc.
+- Implement playing sounds and Windows Mixer using Windows Core Audio (possible impl. http://stackoverflow.com/questions/14306048/controling-volume-mixer)

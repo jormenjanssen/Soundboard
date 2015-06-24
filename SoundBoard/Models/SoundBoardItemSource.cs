@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SoundBoard.Models
 {
     class SoundBoardItemSource : ISoundBoardItemSource
     {
-        private static SoundBoardItemSource _soundBoardItemSource;
+        private static readonly SoundBoardItemSource _soundBoardItemSource;
         private readonly ConcurrentDictionary<string, SoundBoardItem> _soundBoardDictionary;
 
         public ConcurrentDictionary<string, SoundBoardItem> Dictionary
@@ -43,26 +40,14 @@ namespace SoundBoard.Models
         public SoundBoardItem TryGetById(Guid id)
         {
             var soundBoardItem = _soundBoardDictionary.FirstOrDefault(w => w.Value.Id == id);
-            if (soundBoardItem.Value == null)
-                return null;
-
             return soundBoardItem.Value;
         }
 
         public SoundBoardItem TryGetByFilename(string filename)
         {
-            SoundBoardItem soundBoardItem = null;
+            SoundBoardItem soundBoardItem;
 
-            if(Items.TryGetValue(filename,out soundBoardItem))
-            {
-                if(soundBoardItem != null)
-                    return soundBoardItem;
-
-                return null;
-            }
-
-            return null;
-
+            return Items.TryGetValue(filename,out soundBoardItem) ? soundBoardItem : null;
         }
 
         

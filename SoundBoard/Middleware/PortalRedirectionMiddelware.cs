@@ -1,8 +1,4 @@
 ﻿using Microsoft.Owin;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SoundBoard.Middleware
@@ -22,13 +18,11 @@ namespace SoundBoard.Middleware
             {
                 return Task.Run(() =>
                 {
-                    var response = new OwinResponse(context.Environment);
-                    response.StatusCode = 502;
+                    var response = new OwinResponse(context.Environment) {StatusCode = 502};
                     response.Redirect(_url);
                 });
             }
-            else
-                return Next.Invoke(context);
+            return Next.Invoke(context);
                 
         }
     }

@@ -1,10 +1,6 @@
 ﻿using Microsoft.Owin.Hosting;
 using SoundBoard.Helpers;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SoundBoard
 {
@@ -16,7 +12,7 @@ namespace SoundBoard
 
 
             // Start OWIN host 
-            using (WebApp.Start<PortalStartup>(url: baseAddress))
+            using (WebApp.Start<PortalStartup>(baseAddress))
             {
                 Console.WriteLine("{0} Soundboard portal server started @ {1}",DateTime.Now,baseAddress);
                 Console.WriteLine("{0} Starting the directory scanner ",DateTime.Now);

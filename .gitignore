@@ -1,0 +1,26 @@
+# Ignore the following files.
+*.xml.backup
+*.suo
+*.user
+*.*~
+[Tt]humbs.db
+StyleCop.Cache
+*.dotCover
+*.swp
+*.vspx
+~$*.*
+
+# Ignore the following directories
+[Bb]in/
+[Oo]bj/
+_ReSharper*
+/packages/
+/TestResults/
+
+# Specific settings for NetBeans
+build/
+dist/
+nbproject/private/
+
+Riwo.Common.Plc.Sigmatek/SigmatekConnection.cs.orig
+Riwo.Web/logfiles/

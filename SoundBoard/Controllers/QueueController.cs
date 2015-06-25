@@ -9,9 +9,9 @@ namespace SoundBoard.Controllers
     {
         private readonly ISoundBoardItemSource _soundBoardItemSource;
 
-        public QueueController(ISoundBoardItemSource soundBoardItemSource)
+        public QueueController()
         {
-            _soundBoardItemSource = _soundBoardItemSource;
+            _soundBoardItemSource = SoundBoardItemSource.GetInstance();
         }
 
         public SoundBoardItem Get(Guid? id)
@@ -19,16 +19,14 @@ namespace SoundBoard.Controllers
             if (!id.HasValue)
                 throw new ArgumentException("Id is not a vallid guid!");
 
-            SoundBoardItem soundBoardItem = null;
-
-            var soundBoardKeyValueItem = _soundBoardItemSource.TryGetById(id.Value);
-            if (soundBoardKeyValueItem == null)
+            var soundBoardItem = _soundBoardItemSource.TryGetById(id.Value);
+            if (soundBoardItem == null)
                 throw new MediaNotFoundException();
 
 
            
             Console.ForegroundColor = ConsoleColor.DarkCyan;
-            Console.WriteLine("{0} User requested media item {1} for queuing", DateTime.Now,soundBoardItem.Title );
+            Console.WriteLine("{0} User requested media item {1} for queuing", DateTime.Now, soundBoardItem.Title);
             Console.ForegroundColor = ConsoleColor.White;
 
             return soundBoardItem;

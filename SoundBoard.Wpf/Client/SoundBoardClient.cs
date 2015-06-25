@@ -4,7 +4,7 @@
 
     using System;
     using System.Collections.Generic;
-    using SoundBoard.Models;
+    using SoundBoard.Data;
 
     #endregion
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SoundBoard.Models
+namespace SoundBoard.Data
 {
     public class SoundBoardItem
     {

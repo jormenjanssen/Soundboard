@@ -8,8 +8,8 @@
     using System.Windows;
     using System.Windows.Input;
     using PropertyChanged;
-    using SoundBoard.Models;
     using SoundBoard.Wpf.Client;
+    using SoundBoard.Data;
 
     #endregion
 

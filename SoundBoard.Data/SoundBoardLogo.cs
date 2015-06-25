@@ -1,4 +1,4 @@
-﻿namespace SoundBoard.Models
+﻿namespace SoundBoard.Data
 {
     public class SoundBoardLogo
     {

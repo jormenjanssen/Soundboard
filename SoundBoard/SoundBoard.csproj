@@ -79,9 +79,7 @@
     <Compile Include="Middleware\PortalRedirectionMiddelware.cs" />
     <Compile Include="Models\ISoundBoardItemSource.cs" />
     <Compile Include="Models\MediaNotFoundException.cs" />
-    <Compile Include="Models\SoundBoardItem.cs" />
     <Compile Include="Models\SoundBoardItemSource.cs" />
-    <Compile Include="Models\SoundBoardLogo.cs" />
     <Compile Include="PortalStartup.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -143,6 +141,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Sound\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SoundBoard.Data\SoundBoard.Data.csproj">
+      <Project>{9dbb4ed3-3c74-45e9-a191-e6b8b92e3709}</Project>
+      <Name>SoundBoard.Data</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

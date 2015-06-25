@@ -37,7 +37,18 @@
         </ItemsControl>
         <StatusBar Grid.Row="1" Margin="-10" Padding="10 0 10 0" Background="{StaticResource BlueColorBrush}" Foreground="{StaticResource ForegroundColorBrush}" FontSize="20" Height="45" VerticalAlignment="Bottom">
             <StatusBarItem>
-                <Label>Connected</Label>
+                <TextBlock>
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Text" Value="Connected"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Connected}" Value="False">
+                                    <Setter Property="Text" Value="Disconnected"></Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
             </StatusBarItem>
             <StatusBarItem>
                 <Label Name="ErrorMessage"></Label>

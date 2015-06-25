@@ -10,6 +10,7 @@
     using PropertyChanged;
     using SoundBoard.Wpf.Client;
     using SoundBoard.Data;
+    using System.Threading.Tasks;
 
     #endregion
 
@@ -23,7 +24,8 @@
 
         private static readonly ICommand _playSoundBoardItemCommand = new RoutedUICommand("PlaySoundBoardItem", "PlaySoundBoardItemCommand", typeof(MainWindow));
 
-        private SynchronizationContext _syncContext = SynchronizationContext.Current;
+        private readonly SynchronizationContext _syncContext = SynchronizationContext.Current;
+        private CancellationTokenSource _tokenSource = new CancellationTokenSource();
 
         public static ICommand PlaySoundBoardItemCommand
         {
@@ -38,10 +40,45 @@
             CommandBindings.Add(new CommandBinding(SystemCommands.MinimizeWindowCommand, OnMinimizeWindow, OnCanMinimizeWindow));
             CommandBindings.Add(new CommandBinding(SystemCommands.RestoreWindowCommand, OnRestoreWindow, OnCanResizeWindow));
             CommandBindings.Add(new CommandBinding(PlaySoundBoardItemCommand, PlaySoundBoardItem));
+            Task.Run(async () => await GetSoundBoardItemsAsync());
+           
+        }
 
-            using (var soundboarClient = new SoundBoardClient())
+
+        private void RunOnGuiThread(Action action)
+        {
+            if (_syncContext != SynchronizationContext.Current)
+                _syncContext.Post(a => action(), null);
+            else
+                action();
+        }
+
+        public bool Connected { get; set; }
+
+        private async Task GetSoundBoardItemsAsync()
+        {
+            while (!_tokenSource.Token.IsCancellationRequested)
             {
-                SoundBoardItems = new ObservableCollection<SoundBoardItem>(soundboarClient.GetSoundBoardItems());
+                using (var soundboarClient = new SoundBoardClient())
+                {
+                    try
+                    {
+                        var soundBoardItems = new ObservableCollection<SoundBoardItem>(soundboarClient.GetSoundBoardItems());
+                        RunOnGuiThread(() =>
+                        {
+                            SoundBoardItems = soundBoardItems;
+                            Connected = true;
+                        });
+                    }
+                    catch (Exception exception)
+                    {
+                        //todo log!!
+                        Connected = false;
+                        SoundBoardItems = null;
+                    }
+                               
+                }
+                await Task.Delay(TimeSpan.FromSeconds(5), _tokenSource.Token);
             }
         }
 

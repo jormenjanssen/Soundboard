@@ -19,7 +19,7 @@
                 <DataTemplate>
                     <Button Height="180" Width="150" BorderBrush="{StaticResource BlueColorBrush}" BorderThickness="1" Margin="10" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=wpf:MainWindow}, Path=PlaySoundBoardItemCommand}" CommandParameter="{Binding Path=Id}">
                         <Grid>
-                            <Path VerticalAlignment="Top" Margin="25" Data="M332.314,239.837c2.292,6.147,8.154,10.219,14.711,10.219h69.044c8.664,0,15.701-7.029,15.701-15.701
+                            <Path VerticalAlignment="Top" Margin="5" Data="M332.314,239.837c2.292,6.147,8.154,10.219,14.711,10.219h69.044c8.664,0,15.701-7.029,15.701-15.701
 			c0-8.66-7.037-15.701-15.701-15.701h-58.144L326.647,134.7c-2.236-6.014-7.927-10.057-14.335-10.215
 			c-6.455-0.134-12.282,3.619-14.811,9.506l-28.236,65.866L232.733,63.702c-1.884-7.077-8.491-11.936-15.726-11.621
 			c-7.309,0.26-13.471,5.534-14.853,12.717l-43.703,226.947L127.473,169.25c-1.688-6.658-7.494-11.447-14.349-11.834
@@ -35,7 +35,7 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-        <StatusBar Grid.Row="1" Margin="0">
+        <StatusBar Grid.Row="1" Margin="-10" Padding="10 0 10 0" Background="{StaticResource BlueColorBrush}" Foreground="{StaticResource ForegroundColorBrush}" FontSize="20" Height="45" VerticalAlignment="Bottom">
             <StatusBarItem>
                 <Label>Connected</Label>
             </StatusBarItem>

@@ -43,7 +43,7 @@
             {
                 if (SoundBoardItems == null)
                     return new List<SoundBoardItem>();
-                return !string.IsNullOrEmpty(Filter) ? SoundBoardItems.Where(d => d.Title.Contains(Filter)).ToList() : SoundBoardItems.ToList();
+                return !string.IsNullOrEmpty(Filter) ? SoundBoardItems.Where(d => d.Title.ToLower().Contains(Filter.ToLower())).ToList() : SoundBoardItems.ToList();
             }
         }
 
@@ -75,7 +75,7 @@
         //}
 
         public bool Connected { get; set; }
-        public IEnumerable<SoundBoardItem> SoundBoardItems { get; set; }
+        public ObservableCollection<SoundBoardItem> SoundBoardItems { get; set; }
 
         #endregion
 

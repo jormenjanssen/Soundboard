@@ -4,6 +4,7 @@
 
     using System;
     using System.Collections.ObjectModel;
+    using System.Configuration;
     using System.Threading;
     using System.Windows;
     using System.Windows.Input;
@@ -23,9 +24,9 @@
         #region Constructor
 
         private static readonly ICommand _playSoundBoardItemCommand = new RoutedUICommand("PlaySoundBoardItem", "PlaySoundBoardItemCommand", typeof(MainWindow));
-
+        private string _serverAddress;
         private readonly SynchronizationContext _syncContext = SynchronizationContext.Current;
-        private CancellationTokenSource _tokenSource = new CancellationTokenSource();
+        private readonly CancellationTokenSource _tokenSource = new CancellationTokenSource();
 
         public static ICommand PlaySoundBoardItemCommand
         {
@@ -35,6 +36,7 @@
         public MainWindow()
         {
             InitializeComponent();
+            _serverAddress = ConfigurationManager.AppSettings["ServerAddress"].TrimEnd('/') + "/api";
             CommandBindings.Add(new CommandBinding(SystemCommands.CloseWindowCommand, OnCloseWindow));
             CommandBindings.Add(new CommandBinding(SystemCommands.MaximizeWindowCommand, OnMaximizeWindow, OnCanResizeWindow));
             CommandBindings.Add(new CommandBinding(SystemCommands.MinimizeWindowCommand, OnMinimizeWindow, OnCanMinimizeWindow));
@@ -59,7 +61,7 @@
         {
             while (!_tokenSource.Token.IsCancellationRequested)
             {
-                using (var soundboarClient = new SoundBoardClient())
+                using (var soundboarClient = new SoundBoardClient(_serverAddress))
                 {
                     try
                     {
@@ -85,7 +87,7 @@
         private void PlaySoundBoardItem(object sender, ExecutedRoutedEventArgs e)
         {
             var id = (Guid)e.Parameter;
-            using (var soundboarClient = new SoundBoardClient())
+            using (var soundboarClient = new SoundBoardClient(_serverAddress))
             {
                 try
                 {

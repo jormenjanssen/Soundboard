@@ -8,10 +8,12 @@
     using System.Threading;
     using System.Windows;
     using System.Windows.Input;
+    using System.Threading.Tasks;
+    using NHotkey;
+    using NHotkey.Wpf;
     using PropertyChanged;
     using SoundBoard.Wpf.Client;
     using SoundBoard.Data;
-    using System.Threading.Tasks;
 
     #endregion
 
@@ -43,7 +45,22 @@
             CommandBindings.Add(new CommandBinding(SystemCommands.RestoreWindowCommand, OnRestoreWindow, OnCanResizeWindow));
             CommandBindings.Add(new CommandBinding(PlaySoundBoardItemCommand, PlaySoundBoardItem));
             Task.Run(async () => await GetSoundBoardItemsAsync());
-           
+
+            for (var digit = 0; digit <= 9; ++digit)
+            {
+                HotkeyManager.Current.AddOrReplace("Sound-" + digit, Key.D0 + digit, ModifierKeys.Control | ModifierKeys.Shift, OnSound);
+            }
+        }
+
+        private void OnSound(object sender, HotkeyEventArgs e)
+        {
+            var index = e.Name.IndexOf('-');
+            if (index >= 0)
+            {
+                var sound = int.Parse(e.Name.Substring(index + 1));
+                if ((sound >= 0) && (sound < SoundBoardItems.Count))
+                    PlaySoundboardId(SoundBoardItems[sound].Id);
+            }
         }
 
 
@@ -84,9 +101,8 @@
             }
         }
 
-        private void PlaySoundBoardItem(object sender, ExecutedRoutedEventArgs e)
+        private void PlaySoundboardId(Guid id)
         {
-            var id = (Guid)e.Parameter;
             using (var soundboarClient = new SoundBoardClient(_serverAddress))
             {
                 try
@@ -106,8 +122,12 @@
 
                     }, null, TimeSpan.FromSeconds(6), TimeSpan.FromSeconds(6));
                 }
-
             }
+        }
+
+        private void PlaySoundBoardItem(object sender, ExecutedRoutedEventArgs e)
+        {
+            PlaySoundboardId((Guid)e.Parameter);
         }
 
         #endregion

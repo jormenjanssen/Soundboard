@@ -122,7 +122,7 @@ namespace SoundBoard.Helpers
                         {
                             Id = Guid.NewGuid(),
                             SoundboardLogo = SoundBoardLogo.Default,
-                            Title = file,
+                            Title = Path.GetFileName(file),
                             File = file
 
                         };

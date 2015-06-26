@@ -95,7 +95,7 @@ namespace SoundBoard.Helpers
                         {
                             Program.musicAction = null;
                             _mp3Player.Close();
-                            _mp3Player.MasterVolume = 100;
+                            _mp3Player.MasterVolume = 1000;
                             _mp3Player.Open(soundBoardItem.File);
                             _mp3Player.Play(false);
                         };

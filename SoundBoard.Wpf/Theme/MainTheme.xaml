@@ -61,13 +61,14 @@
                                 <AdornerDecorator>
                                     <Grid x:Name="LayoutRoot">
                                         <Grid.RowDefinitions>
-                                            <RowDefinition Height="25" />
+                                            <RowDefinition Height="Auto" />
                                             <RowDefinition Height="*" />
                                             <RowDefinition Height="15" />
                                         </Grid.RowDefinitions>
                                         <ContentPresenter Grid.Row="1" Grid.RowSpan="2" Margin="7"/>
                                         <Rectangle x:Name="HeaderBackground" Height="25" Fill="{DynamicResource WindowBackgroundColorBrush}" VerticalAlignment="Top" Grid.Row="0"/>
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" WindowChrome.IsHitTestVisibleInChrome="True" Grid.Row="0">
+                                            <TextBox Width="300" Margin="5" Text="{Binding Path=Filter, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                                             <Button Command="{Binding Source={x:Static SystemCommands.MinimizeWindowCommand}}" ToolTip="minimize" Style="{StaticResource WindowButtonStyle}">
                                                 <Button.Content>
                                                     <Grid Width="30" Height="25" RenderTransform="1,0,0,1,0,1">

@@ -9,7 +9,7 @@
             <RowDefinition/>
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
-        <ItemsControl ItemsSource="{Binding SoundBoardItems}">
+        <ItemsControl ItemsSource="{Binding FilteredItems}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel />

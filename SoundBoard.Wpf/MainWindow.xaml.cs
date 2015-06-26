@@ -3,15 +3,17 @@
     #region Namespaces
 
     using System;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Configuration;
+    using System.Linq;
     using System.Threading;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Input;
     using PropertyChanged;
-    using SoundBoard.Wpf.Client;
     using SoundBoard.Data;
-    using System.Threading.Tasks;
+    using SoundBoard.Wpf.Client;
 
     #endregion
 
@@ -21,16 +23,28 @@
     [ImplementPropertyChanged]
     public partial class MainWindow
     {
-        #region Constructor
+        #region Private fields
 
-        private static readonly ICommand _playSoundBoardItemCommand = new RoutedUICommand("PlaySoundBoardItem", "PlaySoundBoardItemCommand", typeof(MainWindow));
+       // private string _filterText;
+        private static readonly ICommand _playSoundBoardItemCommand = new RoutedUICommand("PlaySoundBoardItem", "PlaySoundBoardItemCommand", typeof (MainWindow));
         private string _serverAddress;
         private readonly SynchronizationContext _syncContext = SynchronizationContext.Current;
         private readonly CancellationTokenSource _tokenSource = new CancellationTokenSource();
 
-        public static ICommand PlaySoundBoardItemCommand
+        #endregion
+
+        #region Constructor
+
+        public string Filter { get; set; }
+
+        public List<SoundBoardItem> FilteredItems
         {
-            get { return _playSoundBoardItemCommand; }
+            get
+            {
+                if (SoundBoardItems == null)
+                    return new List<SoundBoardItem>();
+                return !string.IsNullOrEmpty(Filter) ? SoundBoardItems.Where(d => d.Title.Contains(Filter)).ToList() : SoundBoardItems.ToList();
+            }
         }
 
         public MainWindow()
@@ -43,19 +57,29 @@
             CommandBindings.Add(new CommandBinding(SystemCommands.RestoreWindowCommand, OnRestoreWindow, OnCanResizeWindow));
             CommandBindings.Add(new CommandBinding(PlaySoundBoardItemCommand, PlaySoundBoardItem));
             Task.Run(async () => await GetSoundBoardItemsAsync());
-           
         }
 
+        #endregion
 
-        private void RunOnGuiThread(Action action)
+        #region Public properties
+
+        public static ICommand PlaySoundBoardItemCommand
         {
-            if (_syncContext != SynchronizationContext.Current)
-                _syncContext.Post(a => action(), null);
-            else
-                action();
+            get { return _playSoundBoardItemCommand; }
         }
+
+        //public string Filter
+        //{
+        //    get { return _filterText; }
+        //    set { _filterText = value; }
+        //}
 
         public bool Connected { get; set; }
+        public IEnumerable<SoundBoardItem> SoundBoardItems { get; set; }
+
+        #endregion
+
+        #region  Private helper functions
 
         private async Task GetSoundBoardItemsAsync()
         {
@@ -78,47 +102,10 @@
                         Connected = false;
                         SoundBoardItems = null;
                     }
-                               
                 }
                 await Task.Delay(TimeSpan.FromSeconds(5), _tokenSource.Token);
             }
         }
-
-        private void PlaySoundBoardItem(object sender, ExecutedRoutedEventArgs e)
-        {
-            var id = (Guid)e.Parameter;
-            using (var soundboarClient = new SoundBoardClient(_serverAddress))
-            {
-                try
-                {
-                    soundboarClient.AddToQueue(id);
-                }
-                catch (Exception exception)
-                {
-                    //Todo log the exception
-                    ErrorMessage.Content = "Error playing soundbank item";
-                    Timer tm = new Timer(state =>
-                    {
-                        _syncContext.Post(s =>
-                        {
-                            ErrorMessage.Content = "";
-                        }, null);
-
-                    }, null, TimeSpan.FromSeconds(6), TimeSpan.FromSeconds(6));
-                }
-
-            }
-        }
-
-        #endregion
-
-        #region Public properties
-
-        public ObservableCollection<SoundBoardItem> SoundBoardItems { get; set; }
-
-        #endregion
-
-        #region  Private helper functions
 
         private void OnCanMinimizeWindow(object sender, CanExecuteRoutedEventArgs e)
         {
@@ -148,6 +135,32 @@
         private void OnRestoreWindow(object target, ExecutedRoutedEventArgs e)
         {
             SystemCommands.RestoreWindow(this);
+        }
+
+        private void PlaySoundBoardItem(object sender, ExecutedRoutedEventArgs e)
+        {
+            var id = (Guid) e.Parameter;
+            using (var soundboarClient = new SoundBoardClient(_serverAddress))
+            {
+                try
+                {
+                    soundboarClient.AddToQueue(id);
+                }
+                catch (Exception exception)
+                {
+                    //Todo log the exception
+                    ErrorMessage.Content = "Error playing soundbank item";
+                    var tm = new Timer(state => { _syncContext.Post(s => { ErrorMessage.Content = ""; }, null); }, null, TimeSpan.FromSeconds(6), TimeSpan.FromSeconds(6));
+                }
+            }
+        }
+
+        private void RunOnGuiThread(Action action)
+        {
+            if (_syncContext != SynchronizationContext.Current)
+                _syncContext.Post(a => action(), null);
+            else
+                action();
         }
 
         #endregion

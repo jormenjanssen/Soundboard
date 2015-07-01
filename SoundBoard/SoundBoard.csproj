@@ -101,6 +101,9 @@
     <Compile Include="PortalStartup.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Synchronization\DispatchSynchronizationContext.cs" />
+    <Compile Include="Synchronization\ISynchronizationWorker.cs" />
+    <Compile Include="Synchronization\SynchronizationWorker.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

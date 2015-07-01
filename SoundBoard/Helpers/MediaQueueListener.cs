@@ -19,6 +19,8 @@ namespace SoundBoard.Helpers
         private MediaQueue _mediaQueue;
         private static MediaQueueListener _mediaQueueListener;
 
+        private SynchronizationContext _synchronizationContext;
+
         #endregion
 
         #region Public properties
@@ -45,6 +47,7 @@ namespace SoundBoard.Helpers
 
         private MediaQueueListener()
         {
+            _synchronizationContext = Program.SynchronizationContext;
             _mediaQueue = new MediaQueue();
             _mp3Player = new Player();
             QueueLoop();
@@ -91,14 +94,13 @@ namespace SoundBoard.Helpers
 
                     if (_mediaQueue.ItemQueue.TryDequeue(out soundBoardItem))
                     {
-                        Program.musicAction = () =>
+                        _synchronizationContext.Post((s) =>
                         {
-                            Program.musicAction = null;
                             _mp3Player.Close();
                             _mp3Player.MasterVolume = 1000;
                             _mp3Player.Open(soundBoardItem.File);
                             _mp3Player.Play(false);
-                        };
+                        }, false);
 
                     }
 

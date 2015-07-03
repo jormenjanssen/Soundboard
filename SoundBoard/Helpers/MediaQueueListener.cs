@@ -87,23 +87,31 @@ namespace SoundBoard.Helpers
         {
             while (true)
             {
-                await SoundBoard.Helpers.TaskExtensions.EventTask();
+                await TaskExtensions.EventTask();
                 while (_mediaQueue.HasMediaItemsQueued)
                 {
                     SoundBoardItem soundBoardItem;
 
-                    if (_mediaQueue.ItemQueue.TryDequeue(out soundBoardItem))
+                    var isPlaying = false;
+                    
+                        isPlaying = _mp3Player.IsPlaying();
+                    
+
+                    if (!isPlaying)
                     {
-                        _synchronizationContext.Post((s) =>
+                        if (_mediaQueue.ItemQueue.TryDequeue(out soundBoardItem))
                         {
-                            _mp3Player.Close();
-                            _mp3Player.MasterVolume = 1000;
-                            _mp3Player.Open(soundBoardItem.File);
-                            _mp3Player.Play(false);
-                        }, false);
-
+                            _synchronizationContext.Post((s) =>
+                            {
+                                Console.WriteLine("mp3 status : {0}", _mp3Player.Status());
+                                _mp3Player.Close();
+                                _mp3Player.MasterVolume = 1000;
+                                _mp3Player.Open(soundBoardItem.File);
+                                _mp3Player.Play(false);
+                                Console.WriteLine("mp3 status : {0}", _mp3Player.Status());
+                            }, false);
+                        }
                     }
-
                     await Task.Delay(750);
                 }
             }
@@ -113,11 +121,11 @@ namespace SoundBoard.Helpers
 
         #region Private methods
 
-       
+
 
         #endregion
 
 
-       
+
     }
 }

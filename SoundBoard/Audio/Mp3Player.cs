@@ -72,10 +72,15 @@ namespace SoundBoard.Audio
         {
             int i = 128;
             System.Text.StringBuilder stringBuilder = new System.Text.StringBuilder(i);
-            mciSendString("status MediaFile mode", stringBuilder, i, 0);
+            mciSendString("status MediaFile mode", stringBuilder, i, 1);
             return stringBuilder.ToString();
         }
 
+
+        public bool IsPlaying()
+        {
+            return Status().ToLower() == "playing";
+        }
         /// <summary>
         /// Get/Set Lelf Volume Factor
         /// </summary>

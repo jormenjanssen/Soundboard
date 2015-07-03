@@ -1,5 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    x:Class="SoundBoard.Wpf.Theme.MainTheme"
                     xmlns:wpf="clr-namespace:SoundBoard.Wpf">
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
@@ -52,6 +53,7 @@
         <Setter Property="ResizeMode" Value="CanResizeWithGrip" />
         <Setter Property="UseLayoutRounding" Value="True" />
         <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
+        <EventSetter Event="KeyDown" Handler="HandleKeyDown"></EventSetter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="wpf:MainWindow">
@@ -68,7 +70,7 @@
                                         <ContentPresenter Grid.Row="1" Grid.RowSpan="2" Margin="7"/>
                                         <Rectangle x:Name="HeaderBackground" Height="25" Fill="{DynamicResource WindowBackgroundColorBrush}" VerticalAlignment="Top" Grid.Row="0"/>
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" WindowChrome.IsHitTestVisibleInChrome="True" Grid.Row="0">
-                                            <TextBox Width="300" Margin="5" Text="{Binding Path=Filter, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                                            <TextBox Width="300" Margin="5" Name="Filter" Text="{Binding Path=Filter, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                                             <Button Command="{Binding Source={x:Static SystemCommands.MinimizeWindowCommand}}" ToolTip="minimize" Style="{StaticResource WindowButtonStyle}">
                                                 <Button.Content>
                                                     <Grid Width="30" Height="25" RenderTransform="1,0,0,1,0,1">

@@ -105,6 +105,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <Compile Include="Theme\MainTheme.xaml.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -62,7 +62,13 @@
                 </TextBlock>
             </StatusBarItem>
             <StatusBarItem>
-                <Label Name="ErrorMessage"></Label>
+                <Label Name="ErrorMessage"/>
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Items in queue : "/>
+                    <Label Content="{Binding Path=QueueCount}"/>
+                </StackPanel>
             </StatusBarItem>
         </StatusBar>
     </Grid>

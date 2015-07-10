@@ -6,6 +6,7 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Configuration;
+    using System.Diagnostics;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -27,7 +28,7 @@
 
        // private string _filterText;
         private static readonly ICommand _playSoundBoardItemCommand = new RoutedUICommand("PlaySoundBoardItem", "PlaySoundBoardItemCommand", typeof (MainWindow));
-        private string _serverAddress;
+        private readonly string _serverAddress;
         private readonly SynchronizationContext _syncContext = SynchronizationContext.Current;
         private readonly CancellationTokenSource _tokenSource = new CancellationTokenSource();
 
@@ -57,6 +58,7 @@
             CommandBindings.Add(new CommandBinding(SystemCommands.RestoreWindowCommand, OnRestoreWindow, OnCanResizeWindow));
             CommandBindings.Add(new CommandBinding(PlaySoundBoardItemCommand, PlaySoundBoardItem));
             Task.Run(async () => await GetSoundBoardItemsAsync());
+            Task.Run(async () => await GetCurrentQueue());
         }
 
         #endregion
@@ -68,11 +70,6 @@
             get { return _playSoundBoardItemCommand; }
         }
 
-        //public string Filter
-        //{
-        //    get { return _filterText; }
-        //    set { _filterText = value; }
-        //}
 
         public bool Connected { get; set; }
         public ObservableCollection<SoundBoardItem> SoundBoardItems { get; set; }
@@ -103,7 +100,42 @@
                         SoundBoardItems = null;
                     }
                 }
-                await Task.Delay(TimeSpan.FromSeconds(5), _tokenSource.Token);
+                await Task.Delay(TimeSpan.FromMilliseconds(1500), _tokenSource.Token);
+            }
+        }
+
+
+        public ObservableCollection<SoundBoardItem> CurrentQueue { get; set; }
+
+        public int QueueCount
+        {
+            get { return CurrentQueue != null ? CurrentQueue.Count : 0; }
+        }
+
+        private async Task GetCurrentQueue()
+        {
+            while (!_tokenSource.Token.IsCancellationRequested)
+            {
+                using (var soundboardClient = new SoundBoardClient(_serverAddress))
+                {
+                    try
+                    {
+                        var queue = new ObservableCollection<SoundBoardItem>(soundboardClient.GetQueue());
+                        Debug.WriteLine(queue.Count);
+                        RunOnGuiThread(() =>
+                        {
+                            CurrentQueue = queue;
+                            Connected = true;
+                        });
+
+                    }
+                    catch (Exception exception)
+                    {
+                        //todo log!!
+                        Connected = false;
+                        CurrentQueue = null;
+                    }
+                }
             }
         }
 

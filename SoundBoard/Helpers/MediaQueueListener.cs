@@ -93,13 +93,12 @@ namespace SoundBoard.Helpers
                     SoundBoardItem soundBoardItem;
 
                     var isPlaying = false;
-                    
-                        isPlaying = _mp3Player.IsPlaying();
+                    isPlaying = _mp3Player.IsPlaying();
                     
 
                     if (!isPlaying)
                     {
-                        if (_mediaQueue.ItemQueue.TryDequeue(out soundBoardItem))
+                        if (_mediaQueue.ItemQueue.TryPeek(out soundBoardItem))
                         {
                             _synchronizationContext.Post((s) =>
                             {
@@ -109,7 +108,14 @@ namespace SoundBoard.Helpers
                                 _mp3Player.Open(soundBoardItem.File);
                                 _mp3Player.Play(false);
                                 Console.WriteLine("mp3 status : {0}", _mp3Player.Status());
+                                while (_mp3Player.IsPlaying())
+                                {
+                                    Thread.Sleep(TimeSpan.FromMilliseconds(500));
+                                }
+                                _mediaQueue.ItemQueue.TryDequeue(out soundBoardItem);
+                               
                             }, false);
+                            
                         }
                     }
                     await Task.Delay(750);

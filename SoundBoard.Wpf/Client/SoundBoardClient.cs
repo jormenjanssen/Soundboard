@@ -37,6 +37,11 @@
             return Execute<SoundBoardItem>("Queue?id=" + Uri.EscapeDataString(id.ToString()));
         }
 
+        public IEnumerable<SoundBoardItem> GetQueue()
+        {
+            return Execute<IEnumerable<SoundBoardItem>>("Queue");
+        }
+
         #endregion
     }
 }

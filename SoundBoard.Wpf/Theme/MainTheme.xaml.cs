@@ -14,6 +14,7 @@
         #region Private fields
 
         private TextBox _filterbox;
+        private ListBox _itemsListBox;
 
         #endregion
 
@@ -32,14 +33,75 @@
         {
             if (Keyboard.Modifiers != ModifierKeys.None) return;
 
-            if (_filterbox == null)
-                _filterbox = UIHelper.FindChild<TextBox>(Application.Current.MainWindow, "Filter");
-            if (_filterbox != null)
-                _filterbox.Focus();
+            switch (e.Key)
+            {
+                case Key.Up:
+                case Key.Right:
+                case Key.Down:                    
+                case Key.Left:
+                      FocusListBox();
+                    break;
+                case Key.Enter:
+                    break;
+                default:
+                    if (_filterbox == null)
+                        _filterbox = UIHelper.FindChild<TextBox>(Application.Current.MainWindow, "Filter");
+                    if (_filterbox != null)
+                        _filterbox.Focus();
+                    break;
+            }
+        }
+
+        private void FocusListBox()
+        {
+            if (_itemsListBox == null)
+                _itemsListBox = UIHelper.FindChild<ListBox>(Application.Current.MainWindow, "ItemsListBox");
+            if (_itemsListBox != null)
+                _itemsListBox.Focus();
         }
 
         #endregion
+
+        private void Filter_OnKeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.Up:
+                case Key.Right:
+                case Key.Down:
+                case Key.Left:
+                    FocusListBox();
+                    Send(e.Key);
+                    break;
+                case Key.Enter:
+                    FocusListBox();
+                    Send(e.Key);
+                    break;
+            }
+        }
+
+        private void Send(Key key)
+        {
+            if (Keyboard.PrimaryDevice != null)
+            {
+                if (Keyboard.PrimaryDevice.ActiveSource != null)
+                {
+                    var e = new KeyEventArgs(Keyboard.PrimaryDevice, Keyboard.PrimaryDevice.ActiveSource, 0, key)
+                    {
+                        RoutedEvent = Keyboard.KeyDownEvent
+                    };
+                    InputManager.Current.ProcessInput(e);
+
+                    // Note: Based on your requirements you may also need to fire events for:
+                    // RoutedEvent = Keyboard.PreviewKeyDownEvent
+                    // RoutedEvent = Keyboard.KeyUpEvent
+                    // RoutedEvent = Keyboard.PreviewKeyUpEvent
+                }
+            }
+        }
     }
+
+
 
 
     public static class UIHelper

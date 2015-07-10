@@ -19,18 +19,18 @@
             <RowDefinition/>
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
-        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-            <ItemsControl ItemsSource="{Binding Source={StaticResource viewSource}}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Button Height="180" Width="150" BorderBrush="{StaticResource BlueColorBrush}" BorderThickness="1" Margin="10" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=wpf:MainWindow}, Path=PlaySoundBoardItemCommand}" CommandParameter="{Binding Path=Id}">
-                            <Grid>
-                                <Path VerticalAlignment="Top" Opacity="0.3" Margin="5" Data="M332.314,239.837c2.292,6.147,8.154,10.219,14.711,10.219h69.044c8.664,0,15.701-7.029,15.701-15.701
+        <!--<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">-->
+        <ListBox KeyDown="ItemsListBox_OnKeyDown" SelectedItem="{Binding SelectedSoundBoardItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Source={StaticResource viewSource}}" Name="ItemsListBox" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel  />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Button Height="180" Width="150" BorderBrush="{StaticResource BlueColorBrush}" BorderThickness="1" Margin="10" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=wpf:MainWindow}, Path=PlaySoundBoardItemCommand}" CommandParameter="{Binding Path=Id}">
+                        <Grid>
+                            <Path VerticalAlignment="Top" Opacity="0.3" Margin="5" Data="M332.314,239.837c2.292,6.147,8.154,10.219,14.711,10.219h69.044c8.664,0,15.701-7.029,15.701-15.701
 			c0-8.66-7.037-15.701-15.701-15.701h-58.144L326.647,134.7c-2.236-6.014-7.927-10.057-14.335-10.215
 			c-6.455-0.134-12.282,3.619-14.811,9.506l-28.236,65.866L232.733,63.702c-1.884-7.077-8.491-11.936-15.726-11.621
 			c-7.309,0.26-13.471,5.534-14.853,12.717l-43.703,226.947L127.473,169.25c-1.688-6.658-7.494-11.447-14.349-11.834
@@ -39,13 +39,21 @@
 			c1.773,6.993,8.057,11.862,15.214,11.862c0.156,0,0.307,0,0.463-0.008c7.356-0.217,13.573-5.507,14.966-12.728l44.15-229.239
 			l30.612,114.021c1.731,6.464,7.358,11.116,14.046,11.598c6.561,0.433,12.908-3.326,15.537-9.474l30.629-71.471L332.314,239.837z" Height="100" Width="100" Fill="SlateGray"
                               Stretch="Uniform"/>
-                                <TextBlock TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Path=Title, Converter={StaticResource FilenameConverter}}" Margin="5 5 5 5" FontSize="18" TextWrapping="Wrap" FontWeight="Bold"/>
-                            </Grid>
-                        </Button>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Path=Title, Converter={StaticResource FilenameConverter}}" Margin="5 5 5 5" FontSize="18" TextWrapping="Wrap" FontWeight="Bold"/>
+                        </Grid>
+                    </Button>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Style.Resources>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
+                             Color="Transparent"/>
+                    </Style.Resources>
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
+        <!--</ScrollViewer>-->
         <StatusBar Grid.Row="1" Margin="-10" Padding="10 0 10 0" Background="{StaticResource BlueColorBrush}" Foreground="{StaticResource ForegroundColorBrush}" FontSize="20" Height="45" VerticalAlignment="Bottom">
             <StatusBarItem>
                 <TextBlock>
@@ -54,7 +62,7 @@
                             <Setter Property="Text" Value="Connected"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Connected}" Value="False">
-                                    <Setter Property="Text" Value="Disconnected"></Setter>
+                                    <Setter Property="Text" Value="Disconnected"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>

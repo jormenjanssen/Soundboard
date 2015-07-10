@@ -11,10 +11,12 @@
     using System.Threading;
     using System.Threading.Tasks;
     using System.Windows;
+    using System.Windows.Controls;
     using System.Windows.Input;
     using PropertyChanged;
     using SoundBoard.Data;
     using SoundBoard.Wpf.Client;
+    using SoundBoard.Wpf.Utility;
 
     #endregion
 
@@ -89,7 +91,10 @@
                         var soundBoardItems = new ObservableCollection<SoundBoardItem>(soundboarClient.GetSoundBoardItems());
                         RunOnGuiThread(() =>
                         {
-                            SoundBoardItems = soundBoardItems;
+                            if (SoundBoardItems == null)
+                                SoundBoardItems = new ObservableCollection<SoundBoardItem>(soundBoardItems);
+                            else
+                                SoundBoardItems.UpdateFrom(soundBoardItems);
                             Connected = true;
                         });
                     }
@@ -172,6 +177,11 @@
         private void PlaySoundBoardItem(object sender, ExecutedRoutedEventArgs e)
         {
             var id = (Guid) e.Parameter;
+            PlayItem(id);
+        }
+
+        private void PlayItem(Guid id)
+        {
             using (var soundboarClient = new SoundBoardClient(_serverAddress))
             {
                 try
@@ -196,5 +206,14 @@
         }
 
         #endregion
+
+        public SoundBoardItem SelectedSoundBoardItem { get; set; }
+
+        private void ItemsListBox_OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter && SelectedSoundBoardItem != null)
+                PlayItem(SelectedSoundBoardItem.Id);
+                
+        }
     }
 }

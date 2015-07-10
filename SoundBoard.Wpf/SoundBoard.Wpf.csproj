@@ -72,6 +72,7 @@
     </Compile>
     <Compile Include="Client\ApiClientBase.cs" />
     <Compile Include="Client\SoundBoardClient.cs" />
+    <Compile Include="Converter\FilenameConverter.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

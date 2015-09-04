@@ -141,6 +141,7 @@
                         CurrentQueue = null;
                     }
                 }
+                await Task.Delay(TimeSpan.FromMilliseconds(500), _tokenSource.Token);
             }
         }
 

@@ -37,7 +37,7 @@ namespace SoundBoard.Controllers
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine("{0} User {1} requested media item {2} for queuing", DateTime.Now, username, soundBoardItem.Title);
             Console.ForegroundColor = ConsoleColor.White;
-
+            QueueLog.LogQueue(soundBoardItem, username);
             _mediaQueue.Enqueue(soundBoardItem);
 
             return soundBoardItem;

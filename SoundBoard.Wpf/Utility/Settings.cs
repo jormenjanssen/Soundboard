@@ -12,11 +12,12 @@ namespace SoundBoard.Wpf.Utility
 
         public static Settings GetSettings()
         {
-            if (!File.Exists("settings.xml"))
+            var fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Riwo Soundboard", "settings.xml");
+            if (!File.Exists(fileName))
                 return new Settings();
 
             var serializer = new XmlSerializer(typeof(Settings));
-            using (var textReader = new XmlTextReader("settings.xml"))
+            using (var textReader = new XmlTextReader(fileName))
             {
                 using (var xmlReader = XmlReader.Create(textReader, new XmlReaderSettings()))
                 {
@@ -28,7 +29,11 @@ namespace SoundBoard.Wpf.Utility
 
         public static void StoreSettings(Settings settings)
         {
-            using (var stringWriter = new XmlTextWriter("settings.xml", Encoding.UTF8))
+            var directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Riwo Soundboard");
+            if (!Directory.Exists(directory))
+                Directory.CreateDirectory(directory);
+            var fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Riwo Soundboard", "settings.xml");
+            using (var stringWriter = new XmlTextWriter(fileName, Encoding.UTF8))
             {
                 var serializer = new XmlSerializer(typeof(Settings));
                 serializer.Serialize(XmlWriter.Create(stringWriter), settings);

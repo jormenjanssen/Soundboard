@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="MediaQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueueLog.cs" />
     <Compile Include="SoundBoardItem.cs" />
     <Compile Include="SoundBoardLogo.cs" />
   </ItemGroup>

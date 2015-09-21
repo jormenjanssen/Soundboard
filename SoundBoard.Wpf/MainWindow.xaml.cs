@@ -29,7 +29,6 @@
         #region Private fields
 
        // private string _filterText;
-        private static readonly ICommand _playSoundBoardItemCommand = new RoutedUICommand("PlaySoundBoardItem", "PlaySoundBoardItemCommand", typeof (MainWindow));
         private readonly string _serverAddress;
         private readonly SynchronizationContext _syncContext = SynchronizationContext.Current;
         private readonly CancellationTokenSource _tokenSource = new CancellationTokenSource();
@@ -55,7 +54,7 @@
             var settings = SettingsHelper.GetSettings();
             while (string.IsNullOrEmpty(settings.Username))
             {
-                var inputDialog = new InputDialog("Please enter your name:", "John Doe");
+                var inputDialog = new InputDialog("Please enter your name:");
                 if (inputDialog.ShowDialog() == true)
                 {
                     settings.Username = inputDialog.Answer;
@@ -75,22 +74,31 @@
             CommandBindings.Add(new CommandBinding(SystemCommands.MinimizeWindowCommand, OnMinimizeWindow, OnCanMinimizeWindow));
             CommandBindings.Add(new CommandBinding(SystemCommands.RestoreWindowCommand, OnRestoreWindow, OnCanResizeWindow));
             CommandBindings.Add(new CommandBinding(PlaySoundBoardItemCommand, PlaySoundBoardItem));
+            CommandBindings.Add(new CommandBinding(ToggleLoggingCommand, ToggleLogging));
             Task.Run(async () => await GetSoundBoardItemsAsync());
             Task.Run(async () => await GetCurrentQueue());
+        }
+
+        private void ToggleLogging(object sender, ExecutedRoutedEventArgs e)
+        {
+            ShowLogging = !ShowLogging;
+            Logging.Visibility = ShowLogging ? Visibility.Visible : Visibility.Collapsed;
         }
 
         #endregion
 
         #region Public properties
 
-        public static ICommand PlaySoundBoardItemCommand
-        {
-            get { return _playSoundBoardItemCommand; }
-        }
+        public static ICommand PlaySoundBoardItemCommand { get; } = new RoutedUICommand("PlaySoundBoardItem", "PlaySoundBoardItemCommand", typeof (MainWindow));
 
 
+        public static ICommand ToggleLoggingCommand { get; } = new RoutedUICommand("ToggleLogging", "ToggleLoggingCommand", typeof(MainWindow));
+
+
+        public bool ShowLogging { get; set; }
         public bool Connected { get; set; }
         public ObservableCollection<SoundBoardItem> SoundBoardItems { get; set; }
+        public ObservableCollection<QueueLogInfo> QueueLogInfos { get; set; }
 
         #endregion
 
@@ -104,13 +112,34 @@
                 {
                     try
                     {
-                        var soundBoardItems = new ObservableCollection<SoundBoardItem>(soundboarClient.GetSoundBoardItems());
+                        var soundBoardItems = soundboarClient.GetSoundBoardItems();
+                        IEnumerable<QueueLogInfo> logs = new List<QueueLogInfo>();
+                        try
+                        {
+                            logs = soundboarClient.GetQueueLog(QueueLogInfos != null && QueueLogInfos.Any() ? QueueLogInfos.Max(d => d.QueueTimestamp) : DateTime.Today);
+                        }
+                        catch (Exception ex)
+                        {
+                            //Old server connection??
+                        }
+                        
                         RunOnGuiThread(() =>
                         {
                             if (SoundBoardItems == null)
                                 SoundBoardItems = new ObservableCollection<SoundBoardItem>(soundBoardItems);
                             else
                                 SoundBoardItems.UpdateFrom(soundBoardItems);
+
+                            if (QueueLogInfos == null)
+                                QueueLogInfos = new ObservableCollection<QueueLogInfo>(logs);
+                            else
+                            {
+                                foreach (var logItem in logs)
+                                {
+                                    QueueLogInfos.Add(logItem);
+                                }
+                                
+                            }
                             Connected = true;
                         });
                     }

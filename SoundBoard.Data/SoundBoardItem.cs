@@ -10,6 +10,8 @@ namespace SoundBoard.Data
 
         public string File { get; set; }
 
+        public int PlayCount { get; set; }
+
         public SoundBoardLogo SoundboardLogo { get; set; }
     }
 }

@@ -87,6 +87,7 @@
       <DependentUpon>AudioForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Audio\Mp3Player.cs" />
+    <Compile Include="Controllers\QueueLogController.cs" />
     <Compile Include="Controllers\QueueController.cs" />
     <Compile Include="Controllers\SoundController.cs" />
     <Compile Include="Helpers\DirectoryScanner.cs" />

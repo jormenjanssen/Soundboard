@@ -32,24 +32,24 @@
         private void HandleKeyDown(object sender, KeyEventArgs e)
         {
             if (Keyboard.Modifiers != ModifierKeys.None) return;
-
-            switch (e.Key)
-            {
-                case Key.Up:
-                case Key.Right:
-                case Key.Down:                    
-                case Key.Left:
-                      FocusListBox();
-                    break;
-                case Key.Enter:
-                    break;
-                default:
-                    if (_filterbox == null)
-                        _filterbox = UIHelper.FindChild<TextBox>(Application.Current.MainWindow, "Filter");
-                    if (_filterbox != null)
-                        _filterbox.Focus();
-                    break;
-            }
+            if (e.SystemKey != Key.F10)
+                switch (e.Key)
+                {
+                    case Key.Up:
+                    case Key.Right:
+                    case Key.Down:
+                    case Key.Left:
+                        FocusListBox();
+                        break;
+                    case Key.Enter:
+                        break;
+                    default:
+                        if (_filterbox == null)
+                            _filterbox = UIHelper.FindChild<TextBox>(Application.Current.MainWindow, "Filter");
+                        if (_filterbox != null)
+                            _filterbox.Focus();
+                        break;
+                }
         }
 
         private void FocusListBox()
@@ -146,14 +146,14 @@
                     if (frameworkElement != null && frameworkElement.Name == childName)
                     {
                         // if the child's name is of the request name
-                        foundChild = (T) child;
+                        foundChild = (T)child;
                         break;
                     }
                 }
                 else
                 {
                     // child element found.
-                    foundChild = (T) child;
+                    foundChild = (T)child;
                     break;
                 }
             }

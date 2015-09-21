@@ -6,6 +6,19 @@
         xmlns:converter="clr-namespace:SoundBoard.Wpf.Converter"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="Riwo 2.0 Soundboard Client" Height="750" Width="1280">
+    <Window.InputBindings>
+        <KeyBinding Key="F10" Command="{Binding ToggleLoggingCommand}" />
+    </Window.InputBindings>
+    <Window.Resources>
+
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <converter:LogItemConverter x:Key="LogItemConverter"/>
+        <CollectionViewSource x:Key="SortedQueueInfos" Source="{Binding QueueLogInfos}">
+            <CollectionViewSource.SortDescriptions>
+                <cm:SortDescription PropertyName="QueueTimestamp" Direction="Descending"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+    </Window.Resources>
     <Grid>
         <Grid.Resources>
             <converter:FilenameConverter x:Key="FilenameConverter"/>
@@ -19,7 +32,10 @@
             <RowDefinition/>
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
-        <!--<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">-->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
         <ListBox KeyDown="ItemsListBox_OnKeyDown" SelectedItem="{Binding SelectedSoundBoardItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Source={StaticResource viewSource}}" Name="ItemsListBox" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -47,14 +63,30 @@
             <ListBox.ItemContainerStyle>
                 <Style TargetType="{x:Type ListBoxItem}">
                     <Style.Resources>
-                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
-                             Color="Transparent"/>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent"/>
                     </Style.Resources>
                 </Style>
             </ListBox.ItemContainerStyle>
         </ListBox>
+        <Border BorderBrush="{StaticResource BlueColorBrush}" Visibility="Collapsed" BorderThickness="1 0 0 0" Grid.Row="0" Grid.Column="1" Name="Logging">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="Logs" Margin="5"/>
+                <ListBox Width="350" ItemsSource="{Binding Source={StaticResource SortedQueueInfos}}">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=., Converter={StaticResource LogItemConverter}}"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </StackPanel>
+        </Border>
         <!--</ScrollViewer>-->
-        <StatusBar Grid.Row="1" Margin="-10" Padding="10 0 10 0" Background="{StaticResource BlueColorBrush}" Foreground="{StaticResource ForegroundColorBrush}" FontSize="20" Height="45" VerticalAlignment="Bottom">
+        <StatusBar Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Margin="-10" Padding="10 0 10 0" Background="{StaticResource BlueColorBrush}" Foreground="{StaticResource ForegroundColorBrush}" FontSize="20" Height="45" VerticalAlignment="Bottom">
             <StatusBarItem>
                 <TextBlock>
                     <TextBlock.Style>

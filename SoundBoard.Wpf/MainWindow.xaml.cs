@@ -52,6 +52,22 @@
 
         public MainWindow()
         {
+            var settings = SettingsHelper.GetSettings();
+            while (string.IsNullOrEmpty(settings.Username))
+            {
+                var inputDialog = new InputDialog("Please enter your name:", "John Doe");
+                if (inputDialog.ShowDialog() == true)
+                {
+                    settings.Username = inputDialog.Answer;
+                    SettingsHelper.StoreSettings(settings);
+                }
+                else
+                {
+                    //close the app, we don't want anonymous users
+                    Close();
+                }
+            }
+
             InitializeComponent();
             _serverAddress = ConfigurationManager.AppSettings["ServerAddress"].TrimEnd('/') + "/api";
             CommandBindings.Add(new CommandBinding(SystemCommands.CloseWindowCommand, OnCloseWindow));

@@ -4,7 +4,9 @@ using SoundBoard.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http;
+using System.Web.Http.Controllers;
 
 namespace SoundBoard.Controllers
 {
@@ -21,6 +23,8 @@ namespace SoundBoard.Controllers
 
         public SoundBoardItem Get(Guid? id)
         {
+            var username = Request.Headers.Contains("username") ? Request.Headers.GetValues("username").First() : "anonymous";
+            
             if (!id.HasValue)
                 throw new ArgumentException("Id is not a vallid guid!");
 
@@ -31,7 +35,7 @@ namespace SoundBoard.Controllers
 
            
             Console.ForegroundColor = ConsoleColor.DarkCyan;
-            Console.WriteLine("{0} User requested media item {1} for queuing", DateTime.Now, soundBoardItem.Title);
+            Console.WriteLine("{0} User {1} requested media item {2} for queuing", DateTime.Now, username, soundBoardItem.Title);
             Console.ForegroundColor = ConsoleColor.White;
 
             _mediaQueue.Enqueue(soundBoardItem);

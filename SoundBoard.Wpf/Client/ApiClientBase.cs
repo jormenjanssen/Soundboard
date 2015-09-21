@@ -1,4 +1,6 @@
-﻿namespace SoundBoard.Wpf.Client
+﻿using SoundBoard.Wpf.Utility;
+
+namespace SoundBoard.Wpf.Client
 {
     #region Namespaces
 
@@ -35,6 +37,8 @@
             {
                 throw new ObjectDisposedException("WebClient has been disposed");
             }
+            //Add user info
+            _lazyClient.Value.Headers.Add("username", SettingsHelper.GetSettings().Username);
 
             return _lazyClient.Value;
         }
@@ -59,7 +63,10 @@
 
         protected T Execute<T>(string urlSegment)
         {
-            return JsonConvert.DeserializeObject<T>(Client().DownloadString(_baseUrl + '/' + urlSegment.TrimStart('/')));
+            using (var client = Client())
+            {
+                return JsonConvert.DeserializeObject<T>(client.DownloadString(_baseUrl + '/' + urlSegment.TrimStart('/')));
+            }
         }
 
         #endregion

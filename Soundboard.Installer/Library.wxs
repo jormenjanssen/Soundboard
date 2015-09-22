@@ -16,11 +16,12 @@
     change the major, minor and/or revision if you will present the end-user
     with an update. Only changing the buildnumber will not result in an upgrade.
   -->
+  
 
   <Product Id="*"
            Name="Riwo Soundboard"
            Language="1033"
-           Version="1.0.0"
+           Version="!(bind.FileVersion.BIN_SOUNDBOARD_EXE)"
            Manufacturer="RIWO Engineering B.V."
            UpgradeCode="BE695522-0EE7-4C7C-AC81-C276677B08A2">
     <Package Description="Riwo Soundboard installer"

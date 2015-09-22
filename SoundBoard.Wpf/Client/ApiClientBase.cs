@@ -39,7 +39,7 @@ namespace SoundBoard.Wpf.Client
             }
             //Add user info
             _lazyClient.Value.Headers.Add("username", SettingsHelper.GetSettings().Username);
-
+            _lazyClient.Value.Headers.Add("version", typeof(ApiClientBase).Assembly.GetName().Version.ToString());
             return _lazyClient.Value;
         }
 

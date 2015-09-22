@@ -67,6 +67,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="..\Global\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Converter\LogItemConverter.cs" />
     <Compile Include="InputDialog.xaml.cs">
       <DependentUpon>InputDialog.xaml</DependentUpon>

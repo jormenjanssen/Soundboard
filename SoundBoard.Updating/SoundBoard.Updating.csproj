@@ -55,6 +55,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Global\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Converters\BytesToHumanConverter.cs" />
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="Helpers\AssemblyHelper.cs" />

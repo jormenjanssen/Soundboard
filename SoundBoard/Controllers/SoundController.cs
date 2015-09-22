@@ -9,6 +9,9 @@ namespace SoundBoard.Controllers
     {
         public IEnumerable<SoundBoardItem> Get()
         {
+            if (!Request.Headers.Contains("version"))
+                return null;
+
             var soundBoardItemSource = SoundBoardItemSource.GetInstance();
             return soundBoardItemSource.Items.Values;
         }

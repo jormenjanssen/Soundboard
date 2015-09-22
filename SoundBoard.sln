@@ -13,6 +13,11 @@ Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Soundboard.Installer", "Sou
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoundBoard.Updating", "SoundBoard.Updating\SoundBoard.Updating.csproj", "{55D7F166-4D22-40D7-A731-25D0BBA3032B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Global", "Global", "{2D54D5A5-554B-43BC-95A5-3287F66C4ED9}"
+	ProjectSection(SolutionItems) = preProject
+		Global\GlobalAssemblyInfo.cs = Global\GlobalAssemblyInfo.cs
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

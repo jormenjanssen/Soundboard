@@ -1,0 +1,42 @@
+﻿<UserControl x:Class="SoundBoard.Updating.Userinterface.UpdateProgressControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:converters="clr-namespace:SoundBoard.AutoUpdate.Converters"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <converters:BytesToHumanConverter x:Key="BytesToHumanConverter" />
+    </UserControl.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25*" />
+            <RowDefinition Height="50*" />
+            <RowDefinition Height="25*" />
+
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0*" />
+                <ColumnDefinition Width="100*" />
+                <ColumnDefinition Width="0*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Row="1" Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <ProgressBar Value="{Binding Progress}" Grid.Row="1" Width="auto" Height="42" />
+                <Label HorizontalAlignment="Center" Grid.Row="2" Content="{Binding BytesPerSec, Converter={StaticResource BytesToHumanConverter}}" />
+            </Grid>
+
+
+        </Grid>
+
+    </Grid>
+</UserControl>

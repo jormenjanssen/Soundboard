@@ -156,6 +156,12 @@
             <File Id="SoundBoard_Wpf_exe_config" Name="SoundBoard.exe.config" Vital="yes"
                   Source="$(var.RootDir)/SoundBoard.Wpf/bin/$(var.Build)/SoundBoard.Wpf.exe.config" Checksum="yes"
                   KeyPath="no" ProcessorArchitecture="msil" />
+        <File Id="SoundBoard_Updating_dll" Name="SoundBoard.Updating.dll" Vital="yes"
+                Source="$(var.RootDir)/SoundBoard.Wpf/bin/$(var.Build)/SoundBoard.Updating.dll" Checksum="yes"
+                KeyPath="no" ProcessorArchitecture="msil" />
+        <File Id="Log4net_dll" Name="log4net.dll" Vital="yes"
+             Source="$(var.RootDir)/SoundBoard.Wpf/bin/$(var.Build)/log4net.dll" Checksum="yes"
+             KeyPath="no" ProcessorArchitecture="msil" />
         <!-- Additional files/folders to be deleted when uninstalling -->
         <RemoveFolder Id="RemoveProgramMenuDirSoundboard" Directory="ProgramMenuDir" On="uninstall"/>
 

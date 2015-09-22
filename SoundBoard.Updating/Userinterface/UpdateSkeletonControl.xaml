@@ -1,0 +1,51 @@
+﻿<UserControl x:Class="SoundBoard.Updating.Userinterface.UpdateSkeletonControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:loc="urn://riwo/localization"
+             mc:Ignorable="d" 
+             d:DesignHeight="400" d:DesignWidth="600" Width="600" Height="400">
+
+
+    <Grid UseLayoutRounding="True" SnapsToDevicePixels="True">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="75" />
+            <RowDefinition />
+            <RowDefinition Height="50" />
+
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="75" />
+                <ColumnDefinition Width="2" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Image Source="{Binding ApplicationIcon}" Height="64" Width="64" />
+            <Label VerticalAlignment="Center" FontSize="24"  Grid.Column="2" Content="Update beschikbaar"/>
+
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="50" />
+            </Grid.RowDefinitions>
+            <ContentPresenter Content="{Binding CenterPanel}"/>
+
+
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Button Command="{Binding SkipCommand}" HorizontalContentAlignment="Center" Grid.Column="1" Content="Update overslaan" Margin="5"/>
+            <Button Command="{Binding UpdateCommand}" HorizontalContentAlignment="Center" Grid.Column="2" Content="Update" Margin="5"/>
+        </Grid>
+
+    </Grid>
+</UserControl>

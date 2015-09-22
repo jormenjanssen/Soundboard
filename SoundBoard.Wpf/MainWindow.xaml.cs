@@ -1,4 +1,6 @@
-﻿namespace SoundBoard.Wpf
+﻿using SoundBoard.Updating;
+
+namespace SoundBoard.Wpf
 {
     #region Namespaces
 
@@ -51,6 +53,9 @@
 
         public MainWindow()
         {
+
+            UpdateManager.ApplyUpdateIfAvailable(true, 10);
+
             var settings = SettingsHelper.GetSettings();
             while (string.IsNullOrEmpty(settings.Username))
             {

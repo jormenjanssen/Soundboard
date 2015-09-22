@@ -5,10 +5,10 @@
         WindowStyle="None"
         ContentRendered="Window_ContentRendered"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SoundBoard.Wpf"
+        Style="{StaticResource DarkWindow}"
         SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
-        Title="InputDialog" Height="125" Width="400">
+        Title="InputDialog" Height="195" Width="400">
     <Grid Margin="15">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -20,7 +20,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Label Name="lblQuestion" Grid.Column="1">Question</Label>
+        <Label Name="lblQuestion" Grid.Column="1" Margin="5">Question</Label>
         <TextBox Name="txtAnswer" Grid.Column="1" Grid.Row="1" MinWidth="250">Answer</TextBox>
 
         <WrapPanel Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Right" Margin="0,15,0,0">

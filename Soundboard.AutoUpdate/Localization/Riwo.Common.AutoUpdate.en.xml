@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Translations code="en" description="Dutch" xmlns="urn:Riwo.Pcs.Localization">
+  
+  <Section name="Generic">
+    <Translation key="UpdateTitle">Checking for updates</Translation>
+    <Translation key="UpdateAvailable">There is an update available</Translation>
+    <Translation key="Update">Update</Translation>
+    <Translation key="Skip">Skip</Translation>
+  </Section>
+
+  <Section name="ProductInfo">
+    <Translation key="OldVersion">Current version:</Translation>
+    <Translation key="NewVersion">New version:</Translation>
+  </Section>
+  
+</Translations>

@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ProductUpdate"
+           xmlns="urn:SoundBoard.AutoUpdate"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="urn:SoundBoard.AutoUpdate"
+           elementFormDefault="qualified">
+
+  <xs:simpleType name="version">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="(\d+\.){1,3}\d+"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:element name="Product">
+    <xs:complexType>
+      <xs:attribute name="minimal-version" type="version" use="optional" />
+      <xs:attribute name="latest-version" type="version" use="required" />
+      <xs:attribute name="url" type="xs:anyURI" use="required" />
+      <xs:attribute name="command" type="xs:string" use="optional" />
+    </xs:complexType>
+  </xs:element>
+  
+</xs:schema>

@@ -68,24 +68,44 @@
                 </Style>
             </ListBox.ItemContainerStyle>
         </ListBox>
-        <Border BorderBrush="{StaticResource BlueColorBrush}" Visibility="Collapsed" BorderThickness="1 0 0 0" Grid.Row="0" Grid.Column="1" Name="Logging">
-            <StackPanel Orientation="Vertical">
-                <TextBlock Text="Logs" Margin="5"/>
-                <ListBox Width="350" ItemsSource="{Binding Source={StaticResource SortedQueueInfos}}">
-                    <ListBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Orientation="Vertical" />
-                        </ItemsPanelTemplate>
-                    </ListBox.ItemsPanel>
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Path=., Converter={StaticResource LogItemConverter}}"/>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </StackPanel>
-        </Border>
-        <!--</ScrollViewer>-->
+        <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1">
+            <TextBlock Text="Logs" Margin="5"/>
+            <ListBox ItemsSource="{Binding Source={StaticResource SortedQueueInfos}}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel  />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Path=., Converter={StaticResource LogItemConverter}}" Width="350" Margin="5 2 5 2"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <StackPanel.Style>
+                <Style TargetType="StackPanel">
+                    <Setter Property="Width" Value="0" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ShowLogging}" Value="true">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Width"  From="0" To="350" Duration="0:0:0.3" AutoReverse="False"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+                            <DataTrigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Width"  From="350" To="0" Duration="0:0:0.3" AutoReverse="False"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.ExitActions>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </StackPanel.Style>
+        </StackPanel>
         <StatusBar Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Margin="-10" Padding="10 0 10 0" Background="{StaticResource BlueColorBrush}" Foreground="{StaticResource ForegroundColorBrush}" FontSize="20" Height="45" VerticalAlignment="Bottom">
             <StatusBarItem>
                 <TextBlock>

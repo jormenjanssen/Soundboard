@@ -14,7 +14,7 @@ namespace SoundBoard.Wpf.Converter
             var item = (QueueLogInfo) value;
 
             if (item == null) return "";
-            return $"{item.QueueTimestamp.ToString("hh:mm:ss")} : {item.QueuedBy} played {item.SampleName}";
+            return $"{item.QueueTimestamp.ToString("hh:mm:ss")} : '{item.QueuedBy}' played '{item.SampleName.Replace(".mp3", "")}'";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

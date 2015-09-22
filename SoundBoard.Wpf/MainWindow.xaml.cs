@@ -82,7 +82,6 @@
         private void ToggleLogging(object sender, ExecutedRoutedEventArgs e)
         {
             ShowLogging = !ShowLogging;
-            Logging.Visibility = ShowLogging ? Visibility.Visible : Visibility.Collapsed;
         }
 
         #endregion
@@ -157,10 +156,7 @@
 
         public ObservableCollection<SoundBoardItem> CurrentQueue { get; set; }
 
-        public int QueueCount
-        {
-            get { return CurrentQueue != null ? CurrentQueue.Count : 0; }
-        }
+        public int QueueCount => CurrentQueue?.Count ?? 0;
 
         private async Task GetCurrentQueue()
         {

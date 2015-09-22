@@ -1,0 +1,194 @@
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
+
+  <!-- 
+    The Product ID should be unique for each product version. It is not
+    allowed to have multiple products installed with the same identifier.
+    The product ID must be updated when a new version is released.
+    
+    The UpgradeCode should stay the same as long as you allow upgrading from
+    that version in later versions. If you create a new version that cannot
+    upgrade the old version anymore, then it's time to change the UpgradeCode.
+    
+    Only the first three number of the version are used (major.minor.revision).
+    The buildnumber (fourth number) is not used to differentiate between
+    versions, but it will be visible to the end-user. Always make sure that you
+    change the major, minor and/or revision if you will present the end-user
+    with an update. Only changing the buildnumber will not result in an upgrade.
+  -->
+
+  <Product Id="*"
+           Name="Riwo Soundboard"
+           Language="1033"
+           Version="1.0.0"
+           Manufacturer="RIWO Engineering B.V."
+           UpgradeCode="BE695522-0EE7-4C7C-AC81-C276677B08A2">
+    <Package Description="Riwo Soundboard installer"
+             Manufacturer="RIWO Engineering B.V."
+             Comments="Riwo Soundboard"
+             InstallerVersion="200"
+             Compressed="yes"/>
+
+    <!-- Icons -->
+    <Icon Id="Soundboard.ico" SourceFile="$(var.RootDir)/SoundBoard.Wpf/speaker3.ico"/>
+
+    <!-- Application properties (see http://msdn.microsoft.com/en-us/library/aa370905(v=VS.85).aspx) -->
+    <Property Id="ARPCOMMENTS">RIWO 2.0 Soundboard</Property>
+    <Property Id="ARPCONTACT">Telephone: +31 (0)541 537390 or via e-mail: support@riwo.eu</Property>
+    <Property Id="ARPHELPLINK">www.riwo.eu</Property>
+    <Property Id="ARPURLINFOABOUT">www.riwo.eu</Property>
+    <Property Id="ARPURLUPDATEINFO">www.riwo.eu</Property>
+    <Property Id="ARPHELPTELEPHONE">+31 (0)541 537390</Property>
+    <Property Id="ARPPRODUCTICON" Value="Soundboard.ico" />
+    <Property Id="ARPSIZE">4096</Property>
+    <!-- Estimated size in kilobytes -->
+    <Property Id="ARPNOMODIFY">1</Property>
+    <!-- Disable modify application functionality -->
+    <Property Id="REINSTALLMODE">omus</Property>
+    <!-- Force all files to be installed (default is omus) -->
+
+    <!-- Upgrade information (per upgrade code) -->
+    <MajorUpgrade AllowDowngrades="no" AllowSameVersionUpgrades="no" DowngradeErrorMessage="Cannot downgrade this application."/>
+
+    <!-- Default media -->
+    <Media Id="1" Cabinet="Setup.cab" EmbedCab="yes" />
+
+    <!-- Set the default INSTALLDIR value based on the registry setting -->
+    <Property Id="INSTALLDIR">
+      <RegistrySearch Id="RiwoRegistry" Type="raw" Root='HKLM' Key="SOFTWARE\RIWO\Soundboard" Name="InstallDir" />
+    </Property>
+
+    <!-- Enable user interface to select installation directory -->
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
+    <Property Id="ALLUSERS"><![CDATA[2]]></Property>
+
+    <!-- Start application on exit -->
+    <CustomAction Id="StartAppOnExit" FileKey="BIN_SOUNDBOARD_EXE" ExeCommand="" Execute="immediate" Impersonate="yes" Return="asyncNoWait" />
+
+    <!-- Define the user interface -->
+    <UI Id="WixUI_RiwoUI">
+      <!-- Font definitions -->
+      <TextStyle Id="WixUI_Font_Normal" FaceName="Tahoma" Size="8" />
+      <TextStyle Id="WixUI_Font_Bigger" FaceName="Tahoma" Size="12" />
+      <TextStyle Id="WixUI_Font_Title" FaceName="Tahoma" Size="9" Bold="yes" />
+
+      <!-- Use default font -->
+      <Property Id="DefaultUIFont" Value="WixUI_Font_Normal" />
+
+      <!-- Use the RiwoUI interface-->
+      <Property Id="WixUI_Mode" Value="RiwoUI" />
+
+      <!-- Include the dialog references -->
+      <DialogRef Id="BrowseDlg" />
+      <DialogRef Id="ErrorDlg" />
+      <DialogRef Id="FatalError" />
+      <DialogRef Id="FilesInUse" />
+      <DialogRef Id="MsiRMFilesInUse" />
+      <DialogRef Id="PrepareDlg" />
+      <DialogRef Id="ProgressDlg" />
+      <DialogRef Id="ResumeDlg" />
+      <DialogRef Id="UserExit" />
+
+      <Publish Dialog="WelcomeDlg" Control="Title" Property="Y" Value="50">1</Publish>
+      <Publish Dialog="WelcomeDlg" Control="Description" Property="Y" Value="100">1</Publish>
+
+      <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
+      <Publish Dialog="ExitDialog" Control="Finish" Event="DoAction" Value="StartAppOnExit" Order="1">1</Publish>
+
+      <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="InstallDirDlg">1</Publish>
+
+      <Publish Dialog="InstallDirDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg">1</Publish>
+      <Publish Dialog="InstallDirDlg" Control="Next" Event="SetTargetPath" Value="[WIXUI_INSTALLDIR]" Order="1">1</Publish>
+      <Publish Dialog="InstallDirDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" Order="2">1</Publish>
+      <Publish Dialog="InstallDirDlg" Control="ChangeFolder" Property="_BrowseProperty" Value="[WIXUI_INSTALLDIR]" Order="1">1</Publish>
+      <Publish Dialog="InstallDirDlg" Control="ChangeFolder" Event="SpawnDialog" Value="BrowseDlg" Order="2">1</Publish>
+
+      <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="InstallDirDlg" Order="1">NOT Installed</Publish>
+      <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlg" Order="2">Installed</Publish>
+
+      <Publish Dialog="MaintenanceWelcomeDlg" Control="Next" Event="NewDialog" Value="MaintenanceTypeDlg">1</Publish>
+
+      <Publish Dialog="MaintenanceTypeDlg" Control="RepairButton" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+      <Publish Dialog="MaintenanceTypeDlg" Control="RemoveButton" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+      <Publish Dialog="MaintenanceTypeDlg" Control="Back" Event="NewDialog" Value="MaintenanceWelcomeDlg">1</Publish>
+    </UI>
+
+    <!-- Include the common UI stuff -->
+    <UIRef Id="WixUI_Common" />
+
+    <!-- Make sure the .NET Framework v4.5 is installed -->
+    <PropertyRef Id="NETFRAMEWORK45"/>
+    <Condition Message="The .NET Framework 4.5 must be installed. Please refer to the manual for further details.">
+      <![CDATA[Installed OR NETFRAMEWORK45]]>
+    </Condition>
+
+
+    <!-- Directories and components -->
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="RiwoProgramFolder" Name="RIWO">
+          <Directory Id="INSTALLDIR" Name="Riwo Soundboard">
+          </Directory>
+        </Directory>
+      </Directory>
+
+      <Directory Id="ProgramMenuFolder" Name="Programs">
+        <Directory Id="ProgramMenuDir" Name="RIWO"/>
+      </Directory>
+    </Directory>
+
+    <DirectoryRef Id="INSTALLDIR">
+      <Component Id="Riwo_Soundboard" Guid="EB88C978-D9CF-40F3-A434-DB6733447E8B" DiskId="1">
+        <File Id="BIN_SOUNDBOARD_EXE" Name="SoundBoard.exe" Vital="yes" Source="$(var.RootDir)/SoundBoard.Wpf/bin/$(var.Build)/SoundBoard.Wpf.exe" Checksum="yes" KeyPath="yes" ProcessorArchitecture="msil">
+          <?if $(var.Build) != Debug ?>
+          <netfx:NativeImage Id="SoundBoard.Wpf.exe" Priority="0"/>
+          <?endif ?>
+        </File>
+            <File Id="FirstFloor_ModernUI" Name="FirstFloor.ModernUI.dll" Vital="yes"
+                  Source="$(var.RootDir)/SoundBoard.Wpf/bin/$(var.Build)/FirstFloor.ModernUI.dll" Checksum="yes" KeyPath="no"
+                  ProcessorArchitecture="msil" />
+            <File Id="Newtonsoft_Json" Name="Newtonsoft.Json.dll" Vital="yes"
+                  Source="$(var.RootDir)/SoundBoard.Wpf/bin/$(var.Build)/Newtonsoft.Json.dll" Checksum="yes" KeyPath="no"
+                  ProcessorArchitecture="msil" />
+            <File Id="Soundboard_Data" Name="SoundBoard.Data.dll" Vital="yes"
+                  Source="$(var.RootDir)/SoundBoard.Wpf/bin/$(var.Build)/SoundBoard.Data.dll" Checksum="yes" KeyPath="no"
+                  ProcessorArchitecture="msil" />
+            <File Id="SoundBoard_Wpf_exe_config" Name="SoundBoard.exe.config" Vital="yes"
+                  Source="$(var.RootDir)/SoundBoard.Wpf/bin/$(var.Build)/SoundBoard.Wpf.exe.config" Checksum="yes"
+                  KeyPath="no" ProcessorArchitecture="msil" />
+        <!-- Additional files/folders to be deleted when uninstalling -->
+        <RemoveFolder Id="RemoveProgramMenuDirSoundboard" Directory="ProgramMenuDir" On="uninstall"/>
+
+      </Component>
+
+      <!-- Shortcut standalone application -->
+      <Component Id="ShortcutSoundboardStartMenu" Guid="24A4E07E-73E4-4D86-9112-D91DD4376356">
+        <Shortcut Id="ShortcutSoundboardStartMenu" Directory="ProgramMenuDir" Icon="Soundboard.ico" Name="Soundboard" WorkingDirectory="INSTALLDIR"
+                  Advertise="no" Description="Soundboard" Target="[INSTALLDIR]SoundBoard.exe" />
+        <RegistryKey Root="HKCU" Key="SOFTWARE\RIWO\Soundboard" Action="createAndRemoveOnUninstall">
+          <RegistryValue Name="SoundboardStartMenuShortcut" Value="1" Type="integer" KeyPath="yes"/>
+        </RegistryKey>
+        <RemoveFolder Id="RemoveSoundboardServiceShortcutFolder" On="uninstall" />
+      </Component>
+
+      <!-- Registry entries -->
+      <Component Id="RegistryEntries" Guid="CDAC8A91-1A4E-46E6-9712-5482375BC721">
+        <RegistryKey Id="RiwoRimoteClientServiceRegInstall" Root="HKLM" Key="SOFTWARE\RIWO\Soundboard" Action="createAndRemoveOnUninstall">
+          <RegistryValue Type="string" Name="InstallDir" Value="[INSTALLDIR]" KeyPath="yes"/>
+        </RegistryKey>
+      </Component>
+
+    </DirectoryRef>
+
+  
+    <Feature Id="Complete" Title="Complete" Description="Complete installation" Display="expand" Level="1" ConfigurableDirectory="INSTALLDIR">
+
+      <Feature Id="Soundboard" Title="Soundboard" Description="Soundboard" Level="1">
+        <ComponentRef Id="Riwo_Soundboard" />
+        <ComponentRef Id="RegistryEntries" />
+        <ComponentRef Id="ShortcutSoundboardStartMenu"/>
+      </Feature>
+    </Feature>
+
+  </Product>
+</Wix>

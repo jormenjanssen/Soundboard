@@ -16,14 +16,14 @@
     change the major, minor and/or revision if you will present the end-user
     with an update. Only changing the buildnumber will not result in an upgrade.
   -->
-  
+
 
   <Product Id="*"
            Name="Riwo Soundboard"
            Language="1033"
            Version="!(bind.FileVersion.BIN_SOUNDBOARD_EXE)"
            Manufacturer="RIWO Engineering B.V."
-           UpgradeCode="BE695522-0EE7-4C7C-AC81-C276677B08A2">
+           UpgradeCode="1F16A754-9201-4138-BADB-1898178F8683">
     <Package Description="Riwo Soundboard installer"
              Manufacturer="RIWO Engineering B.V."
              Comments="Riwo Soundboard"
@@ -48,12 +48,11 @@
     <Property Id="REINSTALLMODE">omus</Property>
     <!-- Force all files to be installed (default is omus) -->
 
-    <!-- Upgrade information (per upgrade code) -->
-    <MajorUpgrade AllowDowngrades="no" AllowSameVersionUpgrades="no" DowngradeErrorMessage="Cannot downgrade this application."/>
-
     <!-- Default media -->
     <Media Id="1" Cabinet="Setup.cab" EmbedCab="yes" />
-
+    <MajorUpgrade Schedule="afterInstallInitialize"
+                   DowngradeErrorMessage="A later version of [ProductName] is already installed "
+             AllowSameVersionUpgrades="yes" />
     <!-- Set the default INSTALLDIR value based on the registry setting -->
     <Property Id="INSTALLDIR">
       <RegistrySearch Id="RiwoRegistry" Type="raw" Root='HKLM' Key="SOFTWARE\RIWO\Soundboard" Name="InstallDir" />
@@ -145,18 +144,18 @@
           <netfx:NativeImage Id="SoundBoard.Wpf.exe" Priority="0"/>
           <?endif ?>
         </File>
-            <File Id="FirstFloor_ModernUI" Name="FirstFloor.ModernUI.dll" Vital="yes"
-                  Source="$(var.RootDir)/SoundBoard.Wpf/bin/$(var.Build)/FirstFloor.ModernUI.dll" Checksum="yes" KeyPath="no"
-                  ProcessorArchitecture="msil" />
-            <File Id="Newtonsoft_Json" Name="Newtonsoft.Json.dll" Vital="yes"
-                  Source="$(var.RootDir)/SoundBoard.Wpf/bin/$(var.Build)/Newtonsoft.Json.dll" Checksum="yes" KeyPath="no"
-                  ProcessorArchitecture="msil" />
-            <File Id="Soundboard_Data" Name="SoundBoard.Data.dll" Vital="yes"
-                  Source="$(var.RootDir)/SoundBoard.Wpf/bin/$(var.Build)/SoundBoard.Data.dll" Checksum="yes" KeyPath="no"
-                  ProcessorArchitecture="msil" />
-            <File Id="SoundBoard_Wpf_exe_config" Name="SoundBoard.exe.config" Vital="yes"
-                  Source="$(var.RootDir)/SoundBoard.Wpf/bin/$(var.Build)/SoundBoard.Wpf.exe.config" Checksum="yes"
-                  KeyPath="no" ProcessorArchitecture="msil" />
+        <File Id="FirstFloor_ModernUI" Name="FirstFloor.ModernUI.dll" Vital="yes"
+              Source="$(var.RootDir)/SoundBoard.Wpf/bin/$(var.Build)/FirstFloor.ModernUI.dll" Checksum="yes" KeyPath="no"
+              ProcessorArchitecture="msil" />
+        <File Id="Newtonsoft_Json" Name="Newtonsoft.Json.dll" Vital="yes"
+              Source="$(var.RootDir)/SoundBoard.Wpf/bin/$(var.Build)/Newtonsoft.Json.dll" Checksum="yes" KeyPath="no"
+              ProcessorArchitecture="msil" />
+        <File Id="Soundboard_Data" Name="SoundBoard.Data.dll" Vital="yes"
+              Source="$(var.RootDir)/SoundBoard.Wpf/bin/$(var.Build)/SoundBoard.Data.dll" Checksum="yes" KeyPath="no"
+              ProcessorArchitecture="msil" />
+        <File Id="SoundBoard_Wpf_exe_config" Name="SoundBoard.exe.config" Vital="yes"
+              Source="$(var.RootDir)/SoundBoard.Wpf/bin/$(var.Build)/SoundBoard.Wpf.exe.config" Checksum="yes"
+              KeyPath="no" ProcessorArchitecture="msil" />
         <File Id="SoundBoard_Updating_dll" Name="SoundBoard.Updating.dll" Vital="yes"
                 Source="$(var.RootDir)/SoundBoard.Wpf/bin/$(var.Build)/SoundBoard.Updating.dll" Checksum="yes"
                 KeyPath="no" ProcessorArchitecture="msil" />
@@ -187,7 +186,7 @@
 
     </DirectoryRef>
 
-  
+
     <Feature Id="Complete" Title="Complete" Description="Complete installation" Display="expand" Level="1" ConfigurableDirectory="INSTALLDIR">
 
       <Feature Id="Soundboard" Title="Soundboard" Description="Soundboard" Level="1">
@@ -196,6 +195,8 @@
         <ComponentRef Id="ShortcutSoundboardStartMenu"/>
       </Feature>
     </Feature>
-
+    <!--<InstallExecuteSequence>
+      <RemoveExistingProducts After='InstallFinalize' />
+    </InstallExecuteSequence>-->
   </Product>
 </Wix>

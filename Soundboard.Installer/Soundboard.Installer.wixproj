@@ -38,12 +38,25 @@
     </WixExtension>
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
-  <!--
-	To modify your build process, add your task inside one of the targets below and uncomment it.
-	Other similar extension points exist, see Wix.targets.
-	<Target Name="BeforeBuild">
-	</Target>
-	<Target Name="AfterBuild">
-	</Target>
-	-->
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+  Other similar extension points exist, see Wix.targets.
+  <Target Name="BeforeBuild">
+    <Delete Files=".\bin\$(Configuration)\*.msi" />
+  </Target>-->
+  <Target Name="AfterBuild">
+    <GetAssemblyIdentity AssemblyFiles="..\SoundBoard.Wpf\bin\$(Configuration)\SoundBoard.Wpf.exe">
+      <Output TaskParameter="Assemblies" ItemName="AssemblyVersion" />
+    </GetAssemblyIdentity>
+    <Copy SourceFiles=".\bin\$(Configuration)\$(OutputName).msi" DestinationFiles=".\bin\$(Configuration)\Soundboard.%(AssemblyVersion.Version).msi" />
+    <Delete Files=".\bin\$(Configuration)\$(OutputName).msi" />
+    <WriteLinesToFile File=".\bin\$(Configuration)\SoundBoard.Wpf.autoupdate.xml" Lines="&lt;Product minimal-version=%27%(AssemblyVersion.Version)%27  latest-version=%27%(AssemblyVersion.Version)%27 url=%27http://stream3:9000/Webportal/Soundboard.%(AssemblyVersion.Version).msi%27 command=%27msiexec /i %25MsiFile%25%27 xmlns=%27urn:SoundBoard.AutoUpdate%27 /&gt;" Overwrite="true"/>
+  </Target>
+  <PropertyGroup>
+    <PreBuildEvent>cd $(TargetDir)
+del %2a.msi</PreBuildEvent>
+  </PropertyGroup>
+  <!--<PropertyGroup>
+    <PostBuildEvent>cd $(TargetDir)
+echo ^&lt;Product minimal-version=%272.0.0.0%27  latest-version=%271.0.0.0%27 url=%27http://stream3:9000/Webportal/Soundboard 1.0.0.msi%27 command=%27msiexec /i %25%25MsiFile%25%25%27 xmlns=%27urn:SoundBoard.AutoUpdate%27 /^&gt; &gt; SoundBoard.Wpf.autoupdate.xml</PostBuildEvent>
+  </PropertyGroup>-->
 </Project>

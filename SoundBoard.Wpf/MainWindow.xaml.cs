@@ -57,6 +57,8 @@ namespace SoundBoard.Wpf
             UpdateManager.ApplyUpdateIfAvailable(true, 10);
 
             var settings = SettingsHelper.GetSettings();
+
+
             while (string.IsNullOrEmpty(settings.Username))
             {
                 var inputDialog = new InputDialog("Please enter your name:");
@@ -80,8 +82,27 @@ namespace SoundBoard.Wpf
             CommandBindings.Add(new CommandBinding(SystemCommands.RestoreWindowCommand, OnRestoreWindow, OnCanResizeWindow));
             CommandBindings.Add(new CommandBinding(PlaySoundBoardItemCommand, PlaySoundBoardItem));
             CommandBindings.Add(new CommandBinding(ToggleLoggingCommand, ToggleLogging));
+            CommandBindings.Add(new CommandBinding(EditNameCommand, EditName));
             Task.Run(async () => await GetSoundBoardItemsAsync());
             Task.Run(async () => await GetCurrentQueue());
+        }
+
+        private void EditName(object sender, ExecutedRoutedEventArgs executedRoutedEventArgs)
+        {
+            var settings = SettingsHelper.GetSettings();
+            var inputDialog = new InputDialog("Please enter your name:", settings.Username);
+            if (inputDialog.ShowDialog() == true)
+            {
+                settings.Username = inputDialog.Answer;
+                SettingsHelper.StoreSettings(settings);
+            }
+            while (string.IsNullOrEmpty(settings.Username))
+            {
+                inputDialog = new InputDialog("Please enter your name:", settings.Username);
+                if (inputDialog.ShowDialog() != true) continue;
+                settings.Username = inputDialog.Answer;
+                SettingsHelper.StoreSettings(settings);
+            }
         }
 
         private void ToggleLogging(object sender, ExecutedRoutedEventArgs e)
@@ -163,6 +184,8 @@ namespace SoundBoard.Wpf
 
         public int QueueCount => CurrentQueue?.Count ?? 0;
 
+        public bool EmergencyOn { get; set; }
+
         private async Task GetCurrentQueue()
         {
             while (!_tokenSource.Token.IsCancellationRequested)
@@ -172,11 +195,13 @@ namespace SoundBoard.Wpf
                     try
                     {
                         var queue = new ObservableCollection<SoundBoardItem>(soundboardClient.GetQueue());
+                        var emergencyOn = await soundboardClient.GetEmergencyStatusAsync();
                         Debug.WriteLine(queue.Count);
                         RunOnGuiThread(() =>
                         {
                             CurrentQueue = queue;
                             Connected = true;
+                            EmergencyOn = emergencyOn;
                         });
 
                     }
@@ -189,6 +214,13 @@ namespace SoundBoard.Wpf
                 }
                 await Task.Delay(TimeSpan.FromMilliseconds(500), _tokenSource.Token);
             }
+        }
+
+        private static ICommand _editNameCommand = new RoutedUICommand("EditName", "EditNameCommand", typeof(MainWindow));
+
+        public static ICommand EditNameCommand
+        {
+            get { return _editNameCommand;}
         }
 
         private void OnCanMinimizeWindow(object sender, CanExecuteRoutedEventArgs e)

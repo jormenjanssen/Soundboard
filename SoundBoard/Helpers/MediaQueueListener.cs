@@ -102,6 +102,7 @@ namespace SoundBoard.Helpers
                     {
                         if (_mediaQueue.ItemQueue.TryPeek(out soundBoardItem))
                         {
+                            var isFlag = false;
                             _synchronizationContext.Post((s) =>
                             {
                                 Console.WriteLine("mp3 status : {0}", _mp3Player.Status());
@@ -116,8 +117,16 @@ namespace SoundBoard.Helpers
                                         _mp3Player.Close();
 
                                     while (EmergencyFlag)
+                                    {
+                                        isFlag = true;
                                         Thread.Sleep(100);
+                                    }
 
+                                    if (isFlag)
+                                    {
+                                        while(_mediaQueue.ItemQueue.Count > 0)
+                                            _mediaQueue.ItemQueue.TryDequeue(out soundBoardItem);
+                                    }
                                     Thread.Sleep(TimeSpan.FromMilliseconds(200));
                                 }
                                 _mediaQueue.ItemQueue.TryDequeue(out soundBoardItem);

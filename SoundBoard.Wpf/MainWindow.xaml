@@ -106,7 +106,17 @@
                 </Style>
             </StackPanel.Style>
         </StackPanel>
-        <StatusBar Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Margin="-10" Padding="10 0 10 0" Background="{StaticResource BlueColorBrush}" Foreground="{StaticResource ForegroundColorBrush}" FontSize="20" Height="45" VerticalAlignment="Bottom">
+        <StatusBar Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Margin="-10" Padding="10 0 10 0" Foreground="{StaticResource ForegroundColorBrush}" FontSize="20" Height="45" VerticalAlignment="Bottom">
+            <StatusBar.Style>
+                <Style TargetType="StatusBar">
+                    <Setter Property="Background" Value="{StaticResource BlueColorBrush}"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=EmergencyOn}" Value="True">
+                            <Setter Property="Background" Value="{StaticResource OrangeColorBrush}"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </StatusBar.Style>
             <StatusBarItem>
                 <TextBlock>
                     <TextBlock.Style>

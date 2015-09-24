@@ -1,4 +1,6 @@
-﻿namespace SoundBoard.Wpf.Theme
+﻿using SoundBoard.Wpf.Properties;
+
+namespace SoundBoard.Wpf.Theme
 {
     #region Namespaces
 

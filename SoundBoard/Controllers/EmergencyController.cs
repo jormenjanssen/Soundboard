@@ -13,6 +13,11 @@ namespace SoundBoard.Controllers
             return MediaQueueListener.EmergencyFlag;
         }
 
+
+        public bool Get(bool status)
+        {
+            return MediaQueueListener.EmergencyFlag;
+        }
         #endregion
     }
 }

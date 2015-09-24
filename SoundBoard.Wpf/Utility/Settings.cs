@@ -3,12 +3,26 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using PropertyChanged;
 
 namespace SoundBoard.Wpf.Utility
 {
     public static class SettingsHelper
     {
         #region Public methods
+
+        private static Settings _instance;
+
+        public static Settings Instance
+        {
+            get
+            {
+                if (_instance == null)
+                    _instance = GetSettings();
+                return _instance;
+            }
+            set { _instance = value; }
+        }
 
         public static Settings GetSettings()
         {
@@ -45,11 +59,15 @@ namespace SoundBoard.Wpf.Utility
 
 
     [Serializable]
+    [ImplementPropertyChanged]
     public class Settings
     {
         #region Public properties
 
         public string Username { get; set; }
+
+
+
 
         #endregion
     }

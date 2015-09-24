@@ -35,6 +35,11 @@ namespace SoundBoard.Wpf.Client
             return Task.Run(() => Execute<bool>("Emergency"));
         }
 
+        public Task<bool> GetEmergencyStatusAsync()
+        {
+            return Task.Run(() => Execute<bool>("Emergency?status=true"));
+        }
+
         public IEnumerable<SoundBoardItem> GetQueue()
         {
             return Execute<IEnumerable<SoundBoardItem>>("Queue");
@@ -49,6 +54,8 @@ namespace SoundBoard.Wpf.Client
         {
             return Execute<IEnumerable<SoundBoardItem>>("Sound");
         }
+
+
 
         #endregion
     }

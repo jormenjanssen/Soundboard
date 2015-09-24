@@ -18,12 +18,18 @@ namespace SoundBoard.Helpers
         private Player _mp3Player;
         private MediaQueue _mediaQueue;
         private static MediaQueueListener _mediaQueueListener;
+        private static bool _emergencyFlag;
 
         private SynchronizationContext _synchronizationContext;
 
         #endregion
 
         #region Public properties
+
+        public static bool EmergencyFlag
+        {
+            get { return _emergencyFlag; }
+        }
 
         public IEnumerable<SoundBoardItem> SoundboardQueue
         {
@@ -65,6 +71,16 @@ namespace SoundBoard.Helpers
         public static void StartListening()
         {
             // nop
+        }
+
+        public static void EnableEmergencyFlag()
+        {
+            _emergencyFlag = true;
+        }
+
+        public static void DisableEmergencyFlag()
+        {
+            _emergencyFlag = false;
         }
 
         public static ISoundBoardQueue GetQueue()
@@ -110,7 +126,13 @@ namespace SoundBoard.Helpers
                                 Console.WriteLine("mp3 status : {0}", _mp3Player.Status());
                                 while (_mp3Player.IsPlaying())
                                 {
-                                    Thread.Sleep(TimeSpan.FromMilliseconds(500));
+                                    if (_emergencyFlag)
+                                        _mp3Player.Close();
+
+                                    while (_emergencyFlag)
+                                        Thread.Sleep(100);
+
+                                    Thread.Sleep(TimeSpan.FromMilliseconds(200));
                                 }
                                 _mediaQueue.ItemQueue.TryDequeue(out soundBoardItem);
                                

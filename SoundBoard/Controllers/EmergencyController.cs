@@ -1,32 +1,18 @@
-﻿using SoundBoard.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Http;
+﻿using System.Web.Http;
+using SoundBoard.Helpers;
 
 namespace SoundBoard.Controllers
 {
     public class EmergencyController : ApiController
     {
+        #region Public methods
+
         public bool Get()
         {
+            MediaQueueListener.EmergencyFlag = !MediaQueueListener.EmergencyFlag;
             return MediaQueueListener.EmergencyFlag;
         }
 
-        public bool Get(bool enableOrDisable)
-        {
-            if (enableOrDisable)
-                MediaQueueListener.EnableEmergencyFlag();
-            else
-                MediaQueueListener.DisableEmergencyFlag();
-
-            return MediaQueueListener.EmergencyFlag;
-        }
-
-
-
-
+        #endregion
     }
 }

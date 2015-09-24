@@ -162,6 +162,14 @@
         <File Id="Log4net_dll" Name="log4net.dll" Vital="yes"
              Source="$(var.RootDir)/SoundBoard.Wpf/bin/$(var.Build)/log4net.dll" Checksum="yes"
              KeyPath="no" ProcessorArchitecture="msil" />
+        <File Id="NHotkey_dll" Name="NHotkey.dll" Vital="yes"
+          Source="$(var.RootDir)/SoundBoard.Wpf/bin/$(var.Build)/NHotkey.dll" Checksum="yes"
+          KeyPath="no" ProcessorArchitecture="msil" />
+        <File Id="NHotkey_Wpf_dll" Name="NHotkey.Wpf.dll" Vital="yes"
+  Source="$(var.RootDir)/SoundBoard.Wpf/bin/$(var.Build)/NHotkey.Wpf.dll" Checksum="yes"
+  KeyPath="no" ProcessorArchitecture="msil" />
+        
+
         <!-- Additional files/folders to be deleted when uninstalling -->
         <RemoveFolder Id="RemoveProgramMenuDirSoundboard" Directory="ProgramMenuDir" On="uninstall"/>
 

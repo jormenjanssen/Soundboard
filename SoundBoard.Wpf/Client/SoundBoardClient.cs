@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading.Tasks;
 using SoundBoard.Data;
 
 namespace SoundBoard.Wpf.Client
 {
-
     public class SoundBoardClient : ApiClientBase
     {
         #region Constructor
@@ -28,6 +28,11 @@ namespace SoundBoard.Wpf.Client
         public void AddToQueue(Guid id)
         {
             Execute<SoundBoardItem>("Queue?id=" + Uri.EscapeDataString(id.ToString()));
+        }
+
+        public Task<bool> EmergencyStopAsync()
+        {
+            return Task.Run(() => Execute<bool>("Emergency"));
         }
 
         public IEnumerable<SoundBoardItem> GetQueue()

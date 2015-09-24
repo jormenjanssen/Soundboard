@@ -69,7 +69,7 @@ namespace SoundBoard.Updating.ViewModels
         {
             ShowCheckingForUpdatesScreen();
             var productUpdate = await _updateManager.CheckForUpdatesAsync()
-                                                    .DelayIfNeeded(new TimeSpan(0,0,3));
+                                                    .DelayIfNeeded(TimeSpan.FromMilliseconds(500));
             if (productUpdate.HasUpdate)
                 ShowUpdateAcceptation(productUpdate);
             else

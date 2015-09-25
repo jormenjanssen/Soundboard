@@ -1,4 +1,7 @@
-﻿using System.Web.Http;
+﻿using System;
+using System.Linq;
+using System.Web.Http;
+using SoundBoard.Data;
 using SoundBoard.Helpers;
 
 namespace SoundBoard.Controllers
@@ -7,9 +10,20 @@ namespace SoundBoard.Controllers
     {
         #region Public methods
 
+        private static string _lockedByName;
         public bool Get()
         {
-            MediaQueueListener.EmergencyFlag = !MediaQueueListener.EmergencyFlag;
+            var username = Request.Headers.Contains("username") ? Request.Headers.GetValues("username").First() : "anonymous";
+
+          
+            if ((MediaQueueListener.EmergencyFlag && _lockedByName.Equals(username, StringComparison.InvariantCultureIgnoreCase)) || !MediaQueueListener.EmergencyFlag)
+            {
+                if (!MediaQueueListener.EmergencyFlag)
+                    QueueLog.LogEmergency(username);
+                _lockedByName = username;
+                MediaQueueListener.EmergencyFlag = !MediaQueueListener.EmergencyFlag;
+            }
+
             return MediaQueueListener.EmergencyFlag;
         }
 

@@ -26,6 +26,16 @@ namespace SoundBoard.Data
             return _queueLog;
         } 
         #endregion
+
+        public static void LogEmergency(string username)
+        {
+            _queueLog.Add(new QueueLogInfo(username, new SoundBoardItem
+            {
+                File = "Emergency",
+                Title = "Emergency",
+                Id = Guid.NewGuid()
+            }));
+        }
     }
 
     public class QueueLogInfo

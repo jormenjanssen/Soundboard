@@ -5,13 +5,27 @@
                     xmlns:utility="clr-namespace:SoundBoard.Wpf.Utility">
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
-    <Color x:Key="WindowBackgroundColor">#FF2D2D30</Color>
+    <Color x:Key="WindowBackgroundColor">#2c2c2f</Color>
+    <Color x:Key="ButtonColor">#004d5f</Color>
     <Color x:Key="HighlightColor">#FF3F3F41</Color>
     <Color x:Key="BlueColor">#FF007ACC</Color>
     <Color x:Key="OrangeColor">#ca5100</Color>
     <Color x:Key="ForegroundColor">#FFF4F4F5</Color>
 
+    <ControlTemplate x:Key="SoundIcon">
+        <Path VerticalAlignment="Top" Opacity="0.3" Margin="5" Data="M332.314,239.837c2.292,6.147,8.154,10.219,14.711,10.219h69.044c8.664,0,15.701-7.029,15.701-15.701
+			c0-8.66-7.037-15.701-15.701-15.701h-58.144L326.647,134.7c-2.236-6.014-7.927-10.057-14.335-10.215
+			c-6.455-0.134-12.282,3.619-14.811,9.506l-28.236,65.866L232.733,63.702c-1.884-7.077-8.491-11.936-15.726-11.621
+			c-7.309,0.26-13.471,5.534-14.853,12.717l-43.703,226.947L127.473,169.25c-1.688-6.658-7.494-11.447-14.349-11.834
+			c-6.899-0.294-13.167,3.749-15.577,10.169l-22.506,60.018H15.699C7.025,227.603,0,234.631,0,243.304
+			c0,8.664,7.025,15.7,15.699,15.7h70.214c6.546,0,12.403-4.063,14.704-10.198l8.706-23.22l35.962,142.256
+			c1.773,6.993,8.057,11.862,15.214,11.862c0.156,0,0.307,0,0.463-0.008c7.356-0.217,13.573-5.507,14.966-12.728l44.15-229.239
+			l30.612,114.021c1.731,6.464,7.358,11.116,14.046,11.598c6.561,0.433,12.908-3.326,15.537-9.474l30.629-71.471L332.314,239.837z" Height="100" Width="100" Fill="SlateGray"
+                              Stretch="Uniform"/>
+    </ControlTemplate>
+    
     <SolidColorBrush x:Key="WindowBackgroundColorBrush" Color="{StaticResource WindowBackgroundColor}" />
+    <SolidColorBrush x:Key="ButtonColorBrush" Color="{StaticResource ButtonColor}" />
     <SolidColorBrush x:Key="HighlightColorBrush" Color="{StaticResource HighlightColor}" />
     <SolidColorBrush x:Key="BlueColorBrush" Color="{StaticResource BlueColor}" />
     <SolidColorBrush x:Key="OrangeColorBrush" Color="{StaticResource OrangeColor}" />
@@ -155,14 +169,14 @@
                                         <Grid Grid.Row="2">
                                             <Path x:Name="ResizeGrip" Visibility="Collapsed" Width="12" Height="12"
                                                   Margin="1" HorizontalAlignment="Right"
-                                                  Stroke="{StaticResource BlueColorBrush}" StrokeThickness="1"
+                                                  Stroke="{Binding Path=SelectedAccentColor.SolidColorBrush}" StrokeThickness="1"
                                                   Stretch="None"
                                                   Data="F1 M1,10 L3,10 M5,10 L7,10 M9,10 L11,10 M2,9 L2,11 M6,9 L6,11 M10,9 L10,11 M5,6 L7,6 M9,6 L11,6 M6,5 L6,7 M10,5 L10,7 M9,2 L11,2 M10,1 L10,3" />
                                         </Grid>
                                     </Grid>
                                 </AdornerDecorator>
                             </Border>
-                            <Border BorderBrush="{StaticResource BlueColorBrush}" BorderThickness="1"
+                            <Border BorderBrush="{Binding Path=SelectedAccentColor.SolidColorBrush}" BorderThickness="1"
                                     Visibility="{Binding IsActive, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Converter={StaticResource BooleanToVisibilityConverter}}" />
                         </Grid>
                     </Border>

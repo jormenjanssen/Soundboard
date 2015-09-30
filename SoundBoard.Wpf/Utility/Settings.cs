@@ -65,7 +65,7 @@ namespace SoundBoard.Wpf.Utility
         #region Public properties
 
         public string Username { get; set; }
-
+        public string PreferedColorSchema { get; set; }
 
 
 

@@ -111,6 +111,7 @@
             <StatusBar.Style>
                 <Style TargetType="StatusBar">
                     <Setter Property="Background" Value="#1D1D1D"/>
+                    <Setter Property="Opacity" Value="0.8"/>
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Path=EmergencyOn}" Value="True">
                             <Setter Property="Background" Value="{StaticResource OrangeColorBrush}"/>

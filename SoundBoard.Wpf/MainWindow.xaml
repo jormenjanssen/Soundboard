@@ -10,7 +10,7 @@
         <KeyBinding Key="F10" Command="{Binding ToggleLoggingCommand}" />
     </Window.InputBindings>
     <Window.Resources>
-        
+
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <converter:LogItemConverter x:Key="LogItemConverter"/>
         <CollectionViewSource x:Key="SortedQueueInfos" Source="{Binding QueueLogInfos}">
@@ -44,10 +44,10 @@
             </ListBox.ItemsPanel>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Button Height="150" Padding="0" Margin="1 4 1 4" BorderThickness="1" BorderBrush="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=wpf:MainWindow}, Path=SelectedAccentColor.SolidColorBrush}" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=wpf:MainWindow}, Path=PlaySoundBoardItemCommand}" CommandParameter="{Binding Path=Id}">
+                    <Button Height="150" Padding="0" Margin="1 4 1 4" BorderThickness="1" Background="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=wpf:MainWindow}, Path=SelectedAccentColor.SolidColorBrush}" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=wpf:MainWindow}, Path=PlaySoundBoardItemCommand}" CommandParameter="{Binding Path=Id}">
                         <!--<Grid>-->
-                            <!--<ContentControl Template="{StaticResource SoundIcon}" />-->
-                            <TextBlock Width="150" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Path=Title, Converter={StaticResource FilenameConverter}}" Margin="5 5 5 5" FontSize="18" TextWrapping="Wrap" />
+                        <!--<ContentControl Template="{StaticResource SoundIcon}" />-->
+                        <TextBlock Width="150" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Path=Title, Converter={StaticResource FilenameConverter}}" Margin="5 5 5 5" FontSize="18" TextWrapping="Wrap" FontWeight="DemiBold"/>
                         <!--</Grid>-->
                     </Button>
                 </DataTemplate>
@@ -63,6 +63,15 @@
         <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1">
             <TextBlock Text="Logs" Margin="5"/>
             <ListBox ItemsSource="{Binding Source={StaticResource SortedQueueInfos}}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListBox.Resources>
+                    <Style TargetType="{x:Type ListBoxItem}" >
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=wpf:MainWindow}, Path=SelectedAccentColor.SolidColorBrush}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListBox.Resources>
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel  />
@@ -98,10 +107,10 @@
                 </Style>
             </StackPanel.Style>
         </StackPanel>
-        <StatusBar Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Margin="-10" Padding="10 0 10 0" Foreground="{StaticResource ForegroundColorBrush}" FontSize="20" Height="45" VerticalAlignment="Bottom">
+        <StatusBar Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Margin="-10" Padding="10 0 10 0" Foreground="{StaticResource ForegroundColorBrush}" FontSize="20" Height="50" VerticalAlignment="Bottom">
             <StatusBar.Style>
                 <Style TargetType="StatusBar">
-                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=wpf:MainWindow}, Path=SelectedAccentColor.SolidColorBrush}"/>
+                    <Setter Property="Background" Value="#1D1D1D"/>
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Path=EmergencyOn}" Value="True">
                             <Setter Property="Background" Value="{StaticResource OrangeColorBrush}"/>
@@ -129,7 +138,8 @@
             <StatusBarItem HorizontalAlignment="Right">
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Accent: "/>
-                    <ComboBox ItemsSource="{Binding Path=AccentColors}" Width="150" SelectedItem="{Binding Path=SelectedAccentColor}" DisplayMemberPath="Name"/>
+                    <ComboBox BorderBrush="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=wpf:MainWindow}, Path=SelectedAccentColor.SolidColorBrush}" Padding="5 0 5 5"
+                        ItemsSource="{Binding Path=AccentColors}" Width="150" SelectedItem="{Binding Path=SelectedAccentColor}" DisplayMemberPath="Name"/>
                     <Label Content=" | Items in queue : "/>
                     <Label Content="{Binding Path=QueueCount}"/>
                 </StackPanel>

@@ -62,7 +62,7 @@ namespace SoundBoard.Wpf
             new AccentColor("Darken", Color.FromRgb(29, 29, 29)),
             new AccentColor("Yellow", Color.FromRgb(244, 179, 0)),
             new AccentColor("Orange", Color.FromRgb(227, 162, 26)),
-            new AccentColor("LightGreen", Color.FromRgb(153, 180, 51)),
+            new AccentColor("LightGreen", Color.FromRgb(90, 142, 34)),
             new AccentColor("Green", Color.FromRgb(0, 163, 0)),
             new AccentColor("Teal", Color.FromRgb(0, 171, 169)),
             new AccentColor("Blue", Color.FromRgb(45, 137, 239)),

@@ -18,7 +18,7 @@ namespace SoundBoard.Wpf
         string _serverAddress = ConfigurationManager.AppSettings["ServerAddress"].TrimEnd('/') + "/api";
         protected override void OnStartup(StartupEventArgs e)
         {
-            //HotkeyManager.Current.AddOrReplace("EmergencyStop", Key.F11, ModifierKeys.Control, EmergyStop);
+            HotkeyManager.Current.AddOrReplace("EmergencyStop", Key.F11, ModifierKeys.Control, EmergyStop);
 
            
             base.OnStartup(e);

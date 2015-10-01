@@ -135,7 +135,7 @@ namespace SoundBoard.Wpf
             {
                 if (SoundBoardItems == null)
                     return new List<SoundBoardItem>();
-                return !string.IsNullOrEmpty(Filter) ? SoundBoardItems.Where(d => d.Title.ToLower().Contains(Filter.ToLower())).ToList() : SoundBoardItems.ToList();
+                return !string.IsNullOrEmpty(Filter) ? SoundBoardItems.Where(d => d.Title.ToLower().Contains(Filter.ToLower()) || d.Category.ToLower().Contains(Filter.ToLower())).ToList() : SoundBoardItems.ToList();
             }
         }
 

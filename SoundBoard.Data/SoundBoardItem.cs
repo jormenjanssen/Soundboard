@@ -12,6 +12,8 @@ namespace SoundBoard.Data
 
         public int PlayCount { get; set; }
 
+        public string Category { get; set; }
+
         public SoundBoardLogo SoundboardLogo { get; set; }
     }
 }

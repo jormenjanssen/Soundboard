@@ -23,10 +23,21 @@
         <Grid.Resources>
             <converter:FilenameConverter x:Key="FilenameConverter"/>
             <CollectionViewSource x:Key="viewSource" Source="{Binding FilteredItems}">
+                <!-- Sorting -->
                 <CollectionViewSource.SortDescriptions>
+                    <cm:SortDescription PropertyName="Category" />
                     <cm:SortDescription PropertyName="Title"/>
                 </CollectionViewSource.SortDescriptions>
+
+                <!-- Grouping -->
+                <CollectionViewSource.GroupDescriptions>
+                    <PropertyGroupDescription PropertyName="Category" />
+                </CollectionViewSource.GroupDescriptions>
             </CollectionViewSource>
+
+            <DataTemplate x:Key="GroupingHeader">
+                <TextBlock Text="{Binding Path=Name}" FontSize="20" FontWeight="SemiBold" Foreground="{StaticResource ForegroundColorBrush}" Margin="10 5"/>
+            </DataTemplate>
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -37,6 +48,10 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <ListBox KeyDown="ItemsListBox_OnKeyDown" HorizontalContentAlignment="Stretch" SelectedItem="{Binding SelectedSoundBoardItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Source={StaticResource viewSource}}" Name="ItemsListBox" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox.GroupStyle>
+                <GroupStyle 
+                HeaderTemplate="{StaticResource ResourceKey=GroupingHeader}" />
+            </ListBox.GroupStyle>
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel  />

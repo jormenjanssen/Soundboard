@@ -123,6 +123,7 @@ namespace SoundBoard.Helpers
                             Id = Guid.NewGuid(),
                             SoundboardLogo = SoundBoardLogo.Default,
                             Title = Path.GetFileName(file),
+                            Category = new DirectoryInfo(Path.GetDirectoryName(file)).Name,
                             File = file
 
                         };

@@ -61,15 +61,15 @@ namespace SoundBoard.Wpf
         {
             new AccentColor("Darken", Color.FromRgb(29, 29, 29)),
             new AccentColor("Yellow", Color.FromRgb(244, 179, 0)),
-            new AccentColor("Orange", Color.FromRgb(227, 162, 26)),
-            new AccentColor("LightGreen", Color.FromRgb(90, 142, 34)),
-            new AccentColor("Green", Color.FromRgb(0, 163, 0)),
+            new AccentColor("Orange", Color.FromRgb(220, 60, 0)),
+            new AccentColor("LightGreen", Color.FromRgb(59, 142, 34)),
+            new AccentColor("Green", Color.FromRgb(16, 124, 16)),
             new AccentColor("Teal", Color.FromRgb(0, 171, 169)),
-            new AccentColor("Blue", Color.FromRgb(45, 137, 239)),
+            new AccentColor("Blue", Color.FromRgb(0, 120, 215)),
             new AccentColor("DarkBlue", Color.FromRgb(43, 87, 151)),
-            new AccentColor("Red", Color.FromRgb(238, 17, 17)),
+            new AccentColor("Red", Color.FromRgb(209, 52, 56)),
             new AccentColor("DarkRed", Color.FromRgb(185, 29, 71)),
-            new AccentColor("Purple", Color.FromRgb(126, 56, 120)),
+            new AccentColor("Purple", Color.FromRgb(128, 57, 132)),
             new AccentColor("DarkPurple", Color.FromRgb(96, 60, 186))
         };
 
@@ -102,6 +102,7 @@ namespace SoundBoard.Wpf
             SelectedAccentColor = AccentColors.First(d => d.Name == (!string.IsNullOrEmpty(settings.PreferedColorSchema) ? settings.PreferedColorSchema : "Blue"));
 
             InitializeComponent();
+
             _serverAddress = ConfigurationManager.AppSettings["ServerAddress"].TrimEnd('/') + "/api";
             CommandBindings.Add(new CommandBinding(SystemCommands.CloseWindowCommand, OnCloseWindow));
             CommandBindings.Add(new CommandBinding(SystemCommands.MaximizeWindowCommand, OnMaximizeWindow, OnCanResizeWindow));
@@ -110,6 +111,7 @@ namespace SoundBoard.Wpf
             CommandBindings.Add(new CommandBinding(PlaySoundBoardItemCommand, PlaySoundBoardItem));
             CommandBindings.Add(new CommandBinding(ToggleLoggingCommand, ToggleLogging));
             CommandBindings.Add(new CommandBinding(EditNameCommand, EditName));
+
             Task.Run(async () => await GetSoundBoardItemsAsync());
             Task.Run(async () => await GetCurrentQueue());
         }

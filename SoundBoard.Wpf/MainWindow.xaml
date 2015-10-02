@@ -4,13 +4,15 @@
         xmlns:wpf="clr-namespace:SoundBoard.Wpf"
         xmlns:cm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         xmlns:converter="clr-namespace:SoundBoard.Wpf.Converter"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:utility="clr-namespace:SoundBoard.Wpf.Utility"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="Riwo 2.0 Soundboard Client" Height="750" Width="1280">
     <Window.InputBindings>
         <KeyBinding Key="F10" Command="{Binding ToggleLoggingCommand}" />
     </Window.InputBindings>
     <Window.Resources>
-
+        <converter:WidthConverter x:Key="WidthConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <converter:LogItemConverter x:Key="LogItemConverter"/>
         <CollectionViewSource x:Key="SortedQueueInfos" Source="{Binding QueueLogInfos}">
@@ -47,34 +49,39 @@
             <ColumnDefinition/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <ListBox KeyDown="ItemsListBox_OnKeyDown" HorizontalContentAlignment="Stretch" SelectedItem="{Binding SelectedSoundBoardItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Source={StaticResource viewSource}}" Name="ItemsListBox" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-            <ListBox.GroupStyle>
-                <GroupStyle 
-                HeaderTemplate="{StaticResource ResourceKey=GroupingHeader}" />
-            </ListBox.GroupStyle>
-            <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel  />
-                </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Button Height="150" Padding="0" Margin="1 4 1 4" BorderThickness="1" Background="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=wpf:MainWindow}, Path=SelectedAccentColor.SolidColorBrush}" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=wpf:MainWindow}, Path=PlaySoundBoardItemCommand}" CommandParameter="{Binding Path=Id}">
-                        <!--<Grid>-->
-                        <!--<ContentControl Template="{StaticResource SoundIcon}" />-->
-                        <TextBlock Width="150" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Path=Title, Converter={StaticResource FilenameConverter}}" Margin="5 5 5 5" FontSize="18" TextWrapping="Wrap" FontWeight="DemiBold"/>
-                        <!--</Grid>-->
-                    </Button>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-            <ListBox.ItemContainerStyle>
-                <Style TargetType="{x:Type ListBoxItem}">
-                    <Style.Resources>
-                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent"/>
-                    </Style.Resources>
-                </Style>
-            </ListBox.ItemContainerStyle>
-        </ListBox>
+        <ScrollViewer>
+            <ListBox KeyDown="ItemsListBox_OnKeyDown" HorizontalContentAlignment="Stretch" SelectedItem="{Binding SelectedSoundBoardItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Source={StaticResource viewSource}}" Name="ItemsListBox" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <i:Interaction.Behaviors>
+                    <utility:BubbleScrollEvent />
+                </i:Interaction.Behaviors>
+                <ListBox.GroupStyle>
+                    <GroupStyle  HeaderTemplate="{StaticResource ResourceKey=GroupingHeader}" />
+                </ListBox.GroupStyle>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Button Height="150" Padding="0" Margin="2" BorderThickness="1" Background="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=wpf:MainWindow}, Path=SelectedAccentColor.SolidColorBrush}" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=wpf:MainWindow}, Path=PlaySoundBoardItemCommand}" CommandParameter="{Binding Path=Id}">
+                            <!--<Grid>-->
+                            <!--<ContentControl Template="{StaticResource SoundIcon}" />-->
+                            <TextBlock Width="{Binding Path=Title, Converter={StaticResource WidthConverter}}" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" Text="{Binding Path=Title, Converter={StaticResource FilenameConverter}}" Margin="5 5 5 5" FontSize="18" TextWrapping="Wrap" FontWeight="DemiBold"/>
+                            <!--</Grid>-->
+                        </Button>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListBoxItem}">
+                        <Setter Property="Padding" Value="0"/>
+                        <Style.Resources>
+                            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent"/>
+                        </Style.Resources>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
+        </ScrollViewer>
         <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1">
             <TextBlock Text="Logs" Margin="5"/>
             <ListBox ItemsSource="{Binding Source={StaticResource SortedQueueInfos}}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">

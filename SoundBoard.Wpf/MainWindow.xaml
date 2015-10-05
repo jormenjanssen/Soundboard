@@ -50,7 +50,7 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <ScrollViewer>
-            <ListBox KeyDown="ItemsListBox_OnKeyDown" HorizontalContentAlignment="Stretch" SelectedItem="{Binding SelectedSoundBoardItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Source={StaticResource viewSource}}" Name="ItemsListBox" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox KeyDown="ItemsListBox_OnKeyDown" HorizontalContentAlignment="Stretch" SelectedItem="{Binding SelectedSoundBoardItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Source={StaticResource viewSource}}" Name="ItemsListBox" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="False">
                 <i:Interaction.Behaviors>
                     <utility:BubbleScrollEvent />
                 </i:Interaction.Behaviors>

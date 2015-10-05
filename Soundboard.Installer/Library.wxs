@@ -147,6 +147,9 @@
         <File Id="FirstFloor_ModernUI" Name="FirstFloor.ModernUI.dll" Vital="yes"
               Source="$(var.RootDir)/SoundBoard.Wpf/bin/$(var.Build)/FirstFloor.ModernUI.dll" Checksum="yes" KeyPath="no"
               ProcessorArchitecture="msil" />
+         <File Id="System.Windows_Interactivity_dll" Name="System.Windows.Interactivity.dll" Vital="yes"
+              Source="$(var.RootDir)/SoundBoard.Wpf/bin/$(var.Build)/System.Windows.Interactivity.dll" Checksum="yes" KeyPath="no"
+              ProcessorArchitecture="msil" />
         <File Id="Newtonsoft_Json" Name="Newtonsoft.Json.dll" Vital="yes"
               Source="$(var.RootDir)/SoundBoard.Wpf/bin/$(var.Build)/Newtonsoft.Json.dll" Checksum="yes" KeyPath="no"
               ProcessorArchitecture="msil" />

@@ -6,6 +6,7 @@
         xmlns:converter="clr-namespace:SoundBoard.Wpf.Converter"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:utility="clr-namespace:SoundBoard.Wpf.Utility"
+        xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="Riwo 2.0 Soundboard Client" Height="750" Width="1280">
     <Window.InputBindings>
@@ -65,10 +66,10 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Button Height="150" Padding="0" Margin="2" BorderThickness="1" Background="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=wpf:MainWindow}, Path=SelectedAccentColor.SolidColorBrush}" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=wpf:MainWindow}, Path=PlaySoundBoardItemCommand}" CommandParameter="{Binding Path=Id}">
-                            <!--<Grid>-->
-                            <!--<ContentControl Template="{StaticResource SoundIcon}" />-->
+                            <Grid>
+                            <ContentControl Template="{StaticResource SoundIcon}" />
                             <TextBlock Width="{Binding Path=Title, Converter={StaticResource WidthConverter}}" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" Text="{Binding Path=Title, Converter={StaticResource FilenameConverter}}" Margin="5 5 5 5" FontSize="18" TextWrapping="Wrap" FontWeight="DemiBold"/>
-                            <!--</Grid>-->
+                            </Grid>
                         </Button>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

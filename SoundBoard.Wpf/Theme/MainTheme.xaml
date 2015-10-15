@@ -1,8 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     x:Class="SoundBoard.Wpf.Theme.MainTheme"
-                    xmlns:wpf="clr-namespace:SoundBoard.Wpf"
-                    xmlns:utility="clr-namespace:SoundBoard.Wpf.Utility">
+                    xmlns:wpf="clr-namespace:SoundBoard.Wpf">
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
     <Color x:Key="WindowBackgroundColor">#2c2c2f</Color>

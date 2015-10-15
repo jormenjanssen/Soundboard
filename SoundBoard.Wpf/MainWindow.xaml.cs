@@ -50,28 +50,16 @@ namespace SoundBoard.Wpf
     {
         #region Private fields
 
-        private static ICommand _editNameCommand = new RoutedUICommand("EditName", "EditNameCommand", typeof(MainWindow));
+        private readonly DelayedExecution _delayedExecution = new DelayedExecution(TimeSpan.FromMilliseconds(500));
 
+        private static readonly ICommand _editNameCommand = new RoutedUICommand("EditName", "EditNameCommand", typeof(MainWindow));
+
+
+        private readonly ObservableCollection<SoundBoardItem> _filteredItems = new ObservableCollection<SoundBoardItem>();
         // private string _filterText;
         private readonly string _serverAddress;
         private readonly SynchronizationContext _syncContext = SynchronizationContext.Current;
         private readonly CancellationTokenSource _tokenSource = new CancellationTokenSource();
-
-        public List<AccentColor> AccentColors { get; } = new List<AccentColor>
-        {
-            new AccentColor("Darken", Color.FromRgb(29, 29, 29)),
-            new AccentColor("Yellow", Color.FromRgb(244, 179, 0)),
-            new AccentColor("Orange", Color.FromRgb(220, 60, 0)),
-            new AccentColor("LightGreen", Color.FromRgb(59, 142, 34)),
-            new AccentColor("Green", Color.FromRgb(16, 124, 16)),
-            new AccentColor("Teal", Color.FromRgb(0, 171, 169)),
-            new AccentColor("Blue", Color.FromRgb(0, 120, 215)),
-            new AccentColor("DarkBlue", Color.FromRgb(43, 87, 151)),
-            new AccentColor("Red", Color.FromRgb(209, 52, 56)),
-            new AccentColor("DarkRed", Color.FromRgb(185, 29, 71)),
-            new AccentColor("Purple", Color.FromRgb(128, 57, 132)),
-            new AccentColor("DarkPurple", Color.FromRgb(96, 60, 186))
-        };
 
         #endregion
 
@@ -82,7 +70,7 @@ namespace SoundBoard.Wpf
             UpdateManager.ApplyUpdateIfAvailable(true, 10);
 
             var settings = SettingsHelper.GetSettings();
-            
+
 
             while (string.IsNullOrEmpty(settings.Username))
             {
@@ -120,33 +108,29 @@ namespace SoundBoard.Wpf
 
         #region Public properties
 
-        public AccentColor SelectedAccentColor { get; set; }
-
-        private void OnSelectedAccentColorChanged()
+        public List<AccentColor> AccentColors { get; } = new List<AccentColor>
         {
-            var settings = SettingsHelper.GetSettings();
-            settings.PreferedColorSchema = SelectedAccentColor.Name;
-            SettingsHelper.StoreSettings(settings);
-        }
+            new AccentColor("Darken", Color.FromRgb(29, 29, 29)),
+            new AccentColor("Yellow", Color.FromRgb(244, 179, 0)),
+            new AccentColor("Orange", Color.FromRgb(220, 60, 0)),
+            new AccentColor("LightGreen", Color.FromRgb(59, 142, 34)),
+            new AccentColor("Green", Color.FromRgb(16, 124, 16)),
+            new AccentColor("Teal", Color.FromRgb(0, 171, 169)),
+            new AccentColor("Blue", Color.FromRgb(0, 120, 215)),
+            new AccentColor("DarkBlue", Color.FromRgb(43, 87, 151)),
+            new AccentColor("Red", Color.FromRgb(209, 52, 56)),
+            new AccentColor("DarkRed", Color.FromRgb(185, 29, 71)),
+            new AccentColor("Purple", Color.FromRgb(128, 57, 132)),
+            new AccentColor("DarkPurple", Color.FromRgb(96, 60, 186))
+        };
+
+        public AccentColor SelectedAccentColor { get; set; }
 
         public string Filter { get; set; }
 
-        public List<SoundBoardItem> FilteredItems
-        {
-            get
-            {
-                if (SoundBoardItems == null)
-                    return new List<SoundBoardItem>();
-                return !string.IsNullOrEmpty(Filter) ? SoundBoardItems.Where(d => d.Title.ToLower().Contains(Filter.ToLower()) || d.Category.ToLower().Contains(Filter.ToLower())).ToList() : SoundBoardItems.ToList();
-            }
-        }
-
+        public ObservableCollection<SoundBoardItem> FilteredItems => _filteredItems;
         public static ICommand PlaySoundBoardItemCommand { get; } = new RoutedUICommand("PlaySoundBoardItem", "PlaySoundBoardItemCommand", typeof(MainWindow));
-
-
         public static ICommand ToggleLoggingCommand { get; } = new RoutedUICommand("ToggleLogging", "ToggleLoggingCommand", typeof(MainWindow));
-
-
         public bool ShowLogging { get; set; }
         public bool Connected { get; set; }
         public ObservableCollection<SoundBoardItem> SoundBoardItems { get; set; }
@@ -239,7 +223,10 @@ namespace SoundBoard.Wpf
                         RunOnGuiThread(() =>
                         {
                             if (SoundBoardItems == null)
+                            {
                                 SoundBoardItems = new ObservableCollection<SoundBoardItem>(soundBoardItems);
+                                FilteredItems.UpdateFrom(SoundBoardItems);
+                            }
                             else
                                 SoundBoardItems.UpdateFrom(soundBoardItems);
 
@@ -302,6 +289,13 @@ namespace SoundBoard.Wpf
             SystemCommands.RestoreWindow(this);
         }
 
+        private void OnSelectedAccentColorChanged()
+        {
+            var settings = SettingsHelper.GetSettings();
+            settings.PreferedColorSchema = SelectedAccentColor.Name;
+            SettingsHelper.StoreSettings(settings);
+        }
+
         private void PlayItem(Guid id)
         {
             using (var soundboarClient = new SoundBoardClient(_serverAddress))
@@ -336,6 +330,23 @@ namespace SoundBoard.Wpf
         private void ToggleLogging(object sender, ExecutedRoutedEventArgs e)
         {
             ShowLogging = !ShowLogging;
+        }
+
+        #endregion
+
+        #region Public methods
+
+        public void OnFilterChanged()
+        {
+            _delayedExecution.Execute(() =>
+            {
+                RunOnGuiThread(() =>
+                {
+                    if (SoundBoardItems == null)
+                        FilteredItems.Clear();
+                    FilteredItems.UpdateFrom(!string.IsNullOrEmpty(Filter) ? SoundBoardItems?.Where(d => d.Title.ToLower().Contains(Filter.ToLower()) || d.Category.ToLower().Contains(Filter.ToLower())).ToList() : SoundBoardItems?.ToList());
+                });
+            });
         }
 
         #endregion

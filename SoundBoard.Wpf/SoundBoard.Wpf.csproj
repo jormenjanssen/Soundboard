@@ -86,6 +86,7 @@
     </Compile>
     <Compile Include="Utility\BubbleScrollEvent.cs" />
     <Compile Include="Utility\CollectionUtils.cs" />
+    <Compile Include="Utility\DelayedExecution.cs" />
     <Compile Include="Utility\Settings.cs" />
     <Page Include="InputDialog.xaml">
       <SubType>Designer</SubType>

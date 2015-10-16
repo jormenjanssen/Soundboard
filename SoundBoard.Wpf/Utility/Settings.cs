@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -43,15 +44,23 @@ namespace SoundBoard.Wpf.Utility
 
         public static void StoreSettings(Settings settings)
         {
-            var directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Riwo Soundboard");
-            if (!Directory.Exists(directory))
-                Directory.CreateDirectory(directory);
-            var fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Riwo Soundboard", "settings.xml");
-            using (var stringWriter = new XmlTextWriter(fileName, Encoding.UTF8))
+            try
             {
-                var serializer = new XmlSerializer(typeof(Settings));
-                serializer.Serialize(XmlWriter.Create(stringWriter), settings);
+                var directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Riwo Soundboard");
+                if (!Directory.Exists(directory))
+                    Directory.CreateDirectory(directory);
+                var fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Riwo Soundboard", "settings.xml");
+                using (var stringWriter = new XmlTextWriter(fileName, Encoding.UTF8))
+                {
+                    var serializer = new XmlSerializer(typeof(Settings));
+                    serializer.Serialize(XmlWriter.Create(stringWriter), settings);
+                }
             }
+            catch (Exception exception)
+            {
+                //log the message
+            }
+            
         }
 
         #endregion
@@ -66,9 +75,8 @@ namespace SoundBoard.Wpf.Utility
 
         public string Username { get; set; }
         public string PreferedColorSchema { get; set; }
-
-
-
+        public List<Guid> Favorites { get; set; }= new List<Guid>(); 
+        
         #endregion
     }
 }

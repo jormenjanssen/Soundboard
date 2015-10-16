@@ -13,19 +13,10 @@ namespace SoundBoard.Data
 
         #region Public methods
 
-        public static void LogQueue(SoundBoardItem item, string queuedBy)
-        {
-            if (item == null) return;
-            item.PlayCount ++;
-            _queueLog.Add(new QueueLogInfo(queuedBy, item));
-        }
-
-
         public static List<QueueLogInfo> GetQueueLog()
         {
             return _queueLog;
-        } 
-        #endregion
+        }
 
         public static void LogEmergency(string username)
         {
@@ -36,10 +27,21 @@ namespace SoundBoard.Data
                 Id = Guid.NewGuid()
             }));
         }
+
+        public static void LogQueue(SoundBoardItem item, string queuedBy)
+        {
+            if (item == null) return;
+            item.PlayCount ++;
+            _queueLog.Add(new QueueLogInfo(queuedBy, item));
+        }
+
+        #endregion
     }
 
     public class QueueLogInfo
     {
+        #region Constructor
+
         public QueueLogInfo(string queuedBy, SoundBoardItem item)
         {
             QueueTimestamp = DateTime.Now;
@@ -52,9 +54,15 @@ namespace SoundBoard.Data
         {
         }
 
+        #endregion
+
+        #region Public properties
+
         public string SampleName { get; set; }
         public Guid ItemId { get; set; }
         public DateTime QueueTimestamp { get; set; }
         public string QueuedBy { get; set; }
+
+        #endregion
     }
 }

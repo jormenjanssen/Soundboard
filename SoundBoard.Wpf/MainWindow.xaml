@@ -6,30 +6,50 @@
         xmlns:converter="clr-namespace:SoundBoard.Wpf.Converter"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:utility="clr-namespace:SoundBoard.Wpf.Utility"
-        xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="Riwo 2.0 Soundboard Client" Height="750" Width="1280">
     <Window.InputBindings>
         <KeyBinding Key="F10" Command="{Binding ToggleLoggingCommand}" />
     </Window.InputBindings>
     <Window.Resources>
-        <converter:WidthConverter x:Key="WidthConverter"/>
+        <Style TargetType="{x:Type Path}" x:Key="FavoriteIcon">
+            <Setter Property="Data" Value="M610.588,230.612c-1.66-7.649-8.976-12.311-16.958-12.311H390.41L323.898,26.399c-2.896-8.352-8.649-12.311-17.632-12.311
+		c-8.976,0-15.063,3.959-17.958,12.311l-66.52,191.902H18.576c-8.983,0-14.638,3.995-17.632,12.311
+		c-2.328,8.976-0.355,15.66,5.988,20.619l162.975,127.384l-59.204,195.23c-2.597,8.571,0,15.631,6.655,20.619
+		c7.315,4.328,14.979,4.86,21.946,0l166.962-116.407l166.628,116.407c3.555,2.483,7.322,3.327,10.977,3.327
+		c10.31,0,18.292-7.982,18.292-18.292c0-1.66-0.227-4.022-1.327-7.648l-58.537-193.236l162.968-127.384
+		C611.822,246.108,613.582,239.254,610.588,230.612z M409.703,357.329c-5.605,4.378-8.352,12.871-6.315,19.619L450.615,533.6
+		l-134.373-93.128c-6.748-4.676-13.765-4.52-20.286,0L161.591,533.6l47.227-156.652c2.036-6.748-0.709-15.241-6.322-19.619
+		L71.792,255.219h163.634c8.315,0,14.056-3.959,16.965-12.304l53.875-154.658l53.549,154.658
+		c2.888,8.352,8.649,12.304,17.291,12.304h163.308L409.703,357.329z"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=IsFavorite}" Value="True">
+                    <Setter Property="Data" Value="M260.133,155.967c-4.487,0-9.25-3.463-10.64-7.73L205.574,13.075c-1.39-4.268-3.633-4.268-5.023,0
+		L156.64,148.237c-1.39,4.268-6.153,7.73-10.64,7.73H3.88c-4.487,0-5.186,2.138-1.553,4.78l114.971,83.521
+		c3.633,2.642,5.454,8.242,4.064,12.51L77.452,391.932c-1.39,4.268,0.431,5.592,4.064,2.951l114.971-83.521
+		c3.633-2.642,9.519-2.642,13.152,0l114.971,83.529c3.633,2.642,5.454,1.317,4.064-2.951l-43.911-135.154
+		c-1.39-4.268,0.431-9.868,4.064-12.51l114.971-83.521c3.633-2.642,2.934-4.78-1.553-4.78H260.133V155.967z"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <converter:WidthConverter x:Key="WidthConverter" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <converter:LogItemConverter x:Key="LogItemConverter"/>
+        <converter:LogItemConverter x:Key="LogItemConverter" />
         <CollectionViewSource x:Key="SortedQueueInfos" Source="{Binding QueueLogInfos}">
             <CollectionViewSource.SortDescriptions>
-                <cm:SortDescription PropertyName="QueueTimestamp" Direction="Descending"/>
+                <cm:SortDescription PropertyName="QueueTimestamp" Direction="Descending" />
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
     </Window.Resources>
     <Grid>
         <Grid.Resources>
-            <converter:FilenameConverter x:Key="FilenameConverter"/>
+            <converter:FilenameConverter x:Key="FilenameConverter" />
             <CollectionViewSource x:Key="viewSource" Source="{Binding FilteredItems}">
                 <!-- Sorting -->
                 <CollectionViewSource.SortDescriptions>
                     <cm:SortDescription PropertyName="Category" />
-                    <cm:SortDescription PropertyName="Title"/>
+                    <cm:SortDescription PropertyName="Title" />
                 </CollectionViewSource.SortDescriptions>
 
                 <!-- Grouping -->
@@ -39,24 +59,28 @@
             </CollectionViewSource>
 
             <DataTemplate x:Key="GroupingHeader">
-                <TextBlock Text="{Binding Path=Name}" FontSize="20" FontWeight="SemiBold" Foreground="{StaticResource ForegroundColorBrush}" Margin="10 5"/>
+                <TextBlock Text="{Binding Path=Name}" FontSize="20" FontWeight="SemiBold"
+                           Foreground="{StaticResource ForegroundColorBrush}" Margin="10 5" />
             </DataTemplate>
         </Grid.Resources>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition MinHeight="50" Height="Auto"/>
+            <RowDefinition />
+            <RowDefinition MinHeight="50" Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <ScrollViewer>
-            <ListBox KeyDown="ItemsListBox_OnKeyDown" HorizontalContentAlignment="Stretch" SelectedItem="{Binding SelectedSoundBoardItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Source={StaticResource viewSource}}" Name="ItemsListBox" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="False">
+            <ListBox KeyDown="ItemsListBox_OnKeyDown" HorizontalContentAlignment="Stretch"
+                     SelectedItem="{Binding SelectedSoundBoardItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     ItemsSource="{Binding Source={StaticResource viewSource}}" Name="ItemsListBox"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="False">
                 <i:Interaction.Behaviors>
                     <utility:BubbleScrollEvent />
                 </i:Interaction.Behaviors>
                 <ListBox.GroupStyle>
-                    <GroupStyle  HeaderTemplate="{StaticResource ResourceKey=GroupingHeader}" />
+                    <GroupStyle HeaderTemplate="{StaticResource ResourceKey=GroupingHeader}" />
                 </ListBox.GroupStyle>
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -65,44 +89,65 @@
                 </ListBox.ItemsPanel>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Button Height="150" Padding="0" Margin="2" BorderThickness="1" Background="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=wpf:MainWindow}, Path=SelectedAccentColor.SolidColorBrush}" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=wpf:MainWindow}, Path=PlaySoundBoardItemCommand}" CommandParameter="{Binding Path=Id}">
-                            <Grid>
-                            <ContentControl Template="{StaticResource SoundIcon}" />
-                            <TextBlock Width="{Binding Path=Title, Converter={StaticResource WidthConverter}}" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" Text="{Binding Path=Title, Converter={StaticResource FilenameConverter}}" Margin="5 5 5 5" FontSize="18" TextWrapping="Wrap" FontWeight="DemiBold"/>
+                        <Button Height="150" Padding="0" Margin="2" BorderThickness="1"
+                                Background="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=wpf:MainWindow}, Path=SelectedAccentColor.SolidColorBrush}"
+                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=wpf:MainWindow}, Path=PlaySoundBoardItemCommand}"
+                                CommandParameter="{Binding Path=Id}">
+                            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="150">
+                                <!--<ContentControl Template="{StaticResource SoundIcon}" />-->
+                                <TextBlock Width="{Binding Path=Title, Converter={StaticResource WidthConverter}}"
+                                           TextAlignment="Center" VerticalAlignment="Center"
+                                           HorizontalAlignment="Center" Foreground="White"
+                                           Text="{Binding Path=Title, Converter={StaticResource FilenameConverter}}"
+                                           Margin="5 5 5 5" FontSize="18" TextWrapping="Wrap" FontWeight="DemiBold" />
+                                <Button VerticalAlignment="Bottom" HorizontalAlignment="Stretch"
+                                        Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=wpf:MainWindow}, Path=ToggleFavoriteCommand}"
+                                        CommandParameter="{Binding Path=Id}">
+                                    <Button.Template>
+                                        <ControlTemplate>
+                                            <Border Opacity="0.5" Background="Black" Height="25">
+                                                <Path Stretch="Uniform" Height="25" Width="25" Name="FavoriteIcon" Fill="White" Style="{StaticResource FavoriteIcon}"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
                             </Grid>
                         </Button>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="{x:Type ListBoxItem}">
-                        <Setter Property="Padding" Value="0"/>
+                        <Setter Property="Padding" Value="0" />
                         <Style.Resources>
-                            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent"/>
+                            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
                         </Style.Resources>
                     </Style>
                 </ListBox.ItemContainerStyle>
             </ListBox>
         </ScrollViewer>
         <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1">
-            <TextBlock Text="Logs" Margin="5"/>
-            <ListBox ItemsSource="{Binding Source={StaticResource SortedQueueInfos}}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <TextBlock Text="Logs" Margin="5" />
+            <ListBox ItemsSource="{Binding Source={StaticResource SortedQueueInfos}}"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                 <ListBox.Resources>
-                    <Style TargetType="{x:Type ListBoxItem}" >
+                    <Style TargetType="{x:Type ListBoxItem}">
                         <Style.Triggers>
                             <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=wpf:MainWindow}, Path=SelectedAccentColor.SolidColorBrush}" />
+                                <Setter Property="Background"
+                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=wpf:MainWindow}, Path=SelectedAccentColor.SolidColorBrush}" />
                             </Trigger>
                         </Style.Triggers>
                     </Style>
                 </ListBox.Resources>
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <WrapPanel  />
+                        <WrapPanel />
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Path=., Converter={StaticResource LogItemConverter}}" Width="350" Margin="5 2 5 2"/>
+                        <TextBlock Text="{Binding Path=., Converter={StaticResource LogItemConverter}}" Width="350"
+                                   Margin="5 2 5 2" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
@@ -114,14 +159,16 @@
                             <DataTrigger.EnterActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="Width"  From="0" To="350" Duration="0:0:0.3" AutoReverse="False"/>
+                                        <DoubleAnimation Storyboard.TargetProperty="Width" From="0" To="350"
+                                                         Duration="0:0:0.3" AutoReverse="False" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </DataTrigger.EnterActions>
                             <DataTrigger.ExitActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="Width"  From="350" To="0" Duration="0:0:0.3" AutoReverse="False"/>
+                                        <DoubleAnimation Storyboard.TargetProperty="Width" From="350" To="0"
+                                                         Duration="0:0:0.3" AutoReverse="False" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </DataTrigger.ExitActions>
@@ -130,14 +177,16 @@
                 </Style>
             </StackPanel.Style>
         </StackPanel>
-        <StatusBar Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Margin="-10" Padding="10 0 10 0" Foreground="{StaticResource ForegroundColorBrush}" FontSize="20" Height="50" VerticalAlignment="Bottom">
+        <StatusBar Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Margin="-10" Padding="10 0 10 0"
+                   Foreground="{StaticResource ForegroundColorBrush}" FontSize="20" Height="50"
+                   VerticalAlignment="Bottom">
             <StatusBar.Style>
                 <Style TargetType="StatusBar">
-                    <Setter Property="Background" Value="#1D1D1D"/>
-                    <Setter Property="Opacity" Value="0.8"/>
+                    <Setter Property="Background" Value="#1D1D1D" />
+                    <Setter Property="Opacity" Value="0.8" />
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Path=EmergencyOn}" Value="True">
-                            <Setter Property="Background" Value="{StaticResource OrangeColorBrush}"/>
+                            <Setter Property="Background" Value="{StaticResource OrangeColorBrush}" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
@@ -146,10 +195,10 @@
                 <TextBlock>
                     <TextBlock.Style>
                         <Style TargetType="TextBlock">
-                            <Setter Property="Text" Value="Connected"/>
+                            <Setter Property="Text" Value="Connected" />
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Connected}" Value="False">
-                                    <Setter Property="Text" Value="Disconnected"/>
+                                    <Setter Property="Text" Value="Disconnected" />
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -157,15 +206,25 @@
                 </TextBlock>
             </StatusBarItem>
             <StatusBarItem>
-                <Label Name="ErrorMessage"/>
+                <Label Name="ErrorMessage" />
             </StatusBarItem>
             <StatusBarItem HorizontalAlignment="Right">
                 <StackPanel Orientation="Horizontal">
-                    <Label Content="Accent: "/>
-                    <ComboBox BorderBrush="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=wpf:MainWindow}, Path=SelectedAccentColor.SolidColorBrush}" Padding="5 0 5 5"
-                        ItemsSource="{Binding Path=AccentColors}" Width="150" SelectedItem="{Binding Path=SelectedAccentColor}" DisplayMemberPath="Name"/>
-                    <Label Content=" | Items in queue : "/>
-                    <Label Content="{Binding Path=QueueCount}"/>
+                    <Label Content="View: " />
+                    <ComboBox
+                        BorderBrush="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=wpf:MainWindow}, Path=SelectedAccentColor.SolidColorBrush}"
+                        Padding="5 0 5 5"
+                        ItemsSource="{Binding Path=ViewTypes}" Width="150"
+                        SelectedItem="{Binding Path=ViewType}" />
+                    
+                    <Label Content="Accent: " />
+                    <ComboBox
+                        BorderBrush="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=wpf:MainWindow}, Path=SelectedAccentColor.SolidColorBrush}"
+                        Padding="5 0 5 5"
+                        ItemsSource="{Binding Path=AccentColors}" Width="150"
+                        SelectedItem="{Binding Path=SelectedAccentColor}" DisplayMemberPath="Name" />
+                    <Label Content=" | Items in queue : " />
+                    <Label Content="{Binding Path=QueueCount}" />
                 </StackPanel>
             </StatusBarItem>
         </StatusBar>

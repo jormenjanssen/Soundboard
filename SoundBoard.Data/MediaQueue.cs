@@ -1,14 +1,20 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Concurrent;
 
 namespace SoundBoard.Data
 {
     public class MediaQueue
     {
+        #region Constructor
+
+        public MediaQueue()
+        {
+            ItemQueue = new ConcurrentQueue<SoundBoardItem>();
+        }
+
+        #endregion
+
+        #region Public properties
+
         public ConcurrentQueue<SoundBoardItem> ItemQueue { get; set; }
 
         public bool HasMediaItemsQueued
@@ -16,10 +22,6 @@ namespace SoundBoard.Data
             get { return !ItemQueue.IsEmpty; }
         }
 
-        public MediaQueue()
-        {
-            ItemQueue = new ConcurrentQueue<SoundBoardItem>();
-        }
-
+        #endregion
     }
 }

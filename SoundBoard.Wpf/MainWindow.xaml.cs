@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using AutoMapper;
 using PropertyChanged;
 using SoundBoard.Data;
 using SoundBoard.Updating;
@@ -54,10 +55,8 @@ namespace SoundBoard.Wpf
 
         private static readonly ICommand _editNameCommand = new RoutedUICommand("EditName", "EditNameCommand", typeof(MainWindow));
 
-
-        private readonly ObservableCollection<SoundBoardItem> _filteredItems = new ObservableCollection<SoundBoardItem>();
-        // private string _filterText;
         private readonly string _serverAddress;
+        private readonly Settings _settings = SettingsHelper.GetSettings();
         private readonly SynchronizationContext _syncContext = SynchronizationContext.Current;
         private readonly CancellationTokenSource _tokenSource = new CancellationTokenSource();
 
@@ -68,17 +67,16 @@ namespace SoundBoard.Wpf
         public MainWindow()
         {
             UpdateManager.ApplyUpdateIfAvailable(true, 10);
+            Mapper.CreateMap<SoundBoardItem, Model.SoundBoardItem>().ForMember(s => s.IsFavorite, source => source.MapFrom(s => _settings.Favorites.Any(d => d == s.Id)));
 
-            var settings = SettingsHelper.GetSettings();
 
-
-            while (string.IsNullOrEmpty(settings.Username))
+            while (string.IsNullOrEmpty(_settings.Username))
             {
                 var inputDialog = new InputDialog("Please enter your name:");
                 if (inputDialog.ShowDialog() == true)
                 {
-                    settings.Username = inputDialog.Answer;
-                    SettingsHelper.StoreSettings(settings);
+                    _settings.Username = inputDialog.Answer;
+                    SettingsHelper.StoreSettings(_settings);
                 }
                 else
                 {
@@ -87,7 +85,7 @@ namespace SoundBoard.Wpf
                 }
             }
 
-            SelectedAccentColor = AccentColors.First(d => d.Name == (!string.IsNullOrEmpty(settings.PreferedColorSchema) ? settings.PreferedColorSchema : "Blue"));
+            SelectedAccentColor = AccentColors.First(d => d.Name == (!string.IsNullOrEmpty(_settings.PreferedColorSchema) ? _settings.PreferedColorSchema : "Blue"));
 
             InitializeComponent();
 
@@ -97,6 +95,7 @@ namespace SoundBoard.Wpf
             CommandBindings.Add(new CommandBinding(SystemCommands.MinimizeWindowCommand, OnMinimizeWindow, OnCanMinimizeWindow));
             CommandBindings.Add(new CommandBinding(SystemCommands.RestoreWindowCommand, OnRestoreWindow, OnCanResizeWindow));
             CommandBindings.Add(new CommandBinding(PlaySoundBoardItemCommand, PlaySoundBoardItem));
+            CommandBindings.Add(new CommandBinding(ToggleFavoriteCommand, ToggleFavorite));
             CommandBindings.Add(new CommandBinding(ToggleLoggingCommand, ToggleLogging));
             CommandBindings.Add(new CommandBinding(EditNameCommand, EditName));
 
@@ -128,19 +127,20 @@ namespace SoundBoard.Wpf
 
         public string Filter { get; set; }
 
-        public ObservableCollection<SoundBoardItem> FilteredItems => _filteredItems;
+        public IList<ViewType> ViewTypes { get; } = Enum.GetValues(typeof(ViewType)).Cast<ViewType>().ToList();
+        public ViewType ViewType { get; set; } = ViewType.All;
+
+        public ObservableCollection<Model.SoundBoardItem> FilteredItems { get; } = new ObservableCollection<Model.SoundBoardItem>();
+
         public static ICommand PlaySoundBoardItemCommand { get; } = new RoutedUICommand("PlaySoundBoardItem", "PlaySoundBoardItemCommand", typeof(MainWindow));
+        public static ICommand ToggleFavoriteCommand { get; } = new RoutedUICommand("ToggleFavorites", "ToggleFavoriteCommand", typeof(MainWindow));
         public static ICommand ToggleLoggingCommand { get; } = new RoutedUICommand("ToggleLogging", "ToggleLoggingCommand", typeof(MainWindow));
         public bool ShowLogging { get; set; }
         public bool Connected { get; set; }
-        public ObservableCollection<SoundBoardItem> SoundBoardItems { get; set; }
+        public ObservableCollection<Model.SoundBoardItem> SoundBoardItems { get; set; }
         public ObservableCollection<QueueLogInfo> QueueLogInfos { get; set; }
-
-
         public ObservableCollection<SoundBoardItem> CurrentQueue { get; set; }
-
         public int QueueCount => CurrentQueue?.Count ?? 0;
-
         public bool EmergencyOn { get; set; }
 
         public static ICommand EditNameCommand
@@ -209,7 +209,7 @@ namespace SoundBoard.Wpf
                 {
                     try
                     {
-                        var soundBoardItems = soundboarClient.GetSoundBoardItems();
+                        var soundBoardItems = Mapper.Map<IList<SoundBoardItem>, IList<Model.SoundBoardItem>>(soundboarClient.GetSoundBoardItems().ToList());
                         IEnumerable<QueueLogInfo> logs = new List<QueueLogInfo>();
                         try
                         {
@@ -224,11 +224,11 @@ namespace SoundBoard.Wpf
                         {
                             if (SoundBoardItems == null)
                             {
-                                SoundBoardItems = new ObservableCollection<SoundBoardItem>(soundBoardItems);
+                                SoundBoardItems = new ObservableCollection<Model.SoundBoardItem>(soundBoardItems);
                                 FilteredItems.UpdateFrom(SoundBoardItems);
                             }
                             else
-                                SoundBoardItems.UpdateFrom(soundBoardItems);
+                                SoundBoardItems.UpdateFrom(soundBoardItems, (a, b) => a.Id == b.Id);
 
                             if (QueueLogInfos == null)
                                 QueueLogInfos = new ObservableCollection<QueueLogInfo>(logs);
@@ -249,7 +249,7 @@ namespace SoundBoard.Wpf
                         SoundBoardItems = null;
                     }
                 }
-                await Task.Delay(TimeSpan.FromMilliseconds(1500), _tokenSource.Token);
+                await Task.Delay(TimeSpan.FromSeconds(2), _tokenSource.Token);
             }
         }
 
@@ -291,9 +291,13 @@ namespace SoundBoard.Wpf
 
         private void OnSelectedAccentColorChanged()
         {
-            var settings = SettingsHelper.GetSettings();
-            settings.PreferedColorSchema = SelectedAccentColor.Name;
-            SettingsHelper.StoreSettings(settings);
+            _settings.PreferedColorSchema = SelectedAccentColor.Name;
+            SettingsHelper.StoreSettings(_settings);
+        }
+
+        private void OnViewTypeChanged()
+        {
+            UpdateFilteredList();
         }
 
         private void PlayItem(Guid id)
@@ -327,9 +331,45 @@ namespace SoundBoard.Wpf
                 action();
         }
 
+        private void ToggleFavorite(object sender, ExecutedRoutedEventArgs e)
+        {
+            var id = (Guid) e.Parameter;
+            var item = SoundBoardItems.FirstOrDefault(d => d.Id == id);
+            if (item == null) return;
+            item.IsFavorite = !item.IsFavorite;
+
+            if (item.IsFavorite)
+                _settings.Favorites.Add(id);
+            else
+            {
+                _settings.Favorites.Remove(id);
+                if (ViewType == ViewType.Favorites)
+                    UpdateFilteredList();
+            }
+            SettingsHelper.StoreSettings(_settings);
+        }
+
         private void ToggleLogging(object sender, ExecutedRoutedEventArgs e)
         {
             ShowLogging = !ShowLogging;
+        }
+
+        private void UpdateFilteredList()
+        {
+            RunOnGuiThread(() =>
+            {
+                if (SoundBoardItems == null)
+                    FilteredItems.Clear();
+                switch (ViewType)
+                {
+                    case ViewType.All:
+                        FilteredItems.UpdateFrom(!string.IsNullOrEmpty(Filter) ? SoundBoardItems?.Where(d => d.Title.ToLower().Contains(Filter.ToLower()) || d.Category.ToLower().Contains(Filter.ToLower())).ToList() : SoundBoardItems?.ToList());
+                        break;
+                    case ViewType.Favorites:
+                        FilteredItems.UpdateFrom(!string.IsNullOrEmpty(Filter) ? SoundBoardItems?.Where(d => d.Title.ToLower().Contains(Filter.ToLower()) || d.Category.ToLower().Contains(Filter.ToLower())).Where(d => d.IsFavorite).ToList() : SoundBoardItems?.Where(d => d.IsFavorite).ToList());
+                        break;
+                }
+            });
         }
 
         #endregion
@@ -338,17 +378,15 @@ namespace SoundBoard.Wpf
 
         public void OnFilterChanged()
         {
-            _delayedExecution.Execute(() =>
-            {
-                RunOnGuiThread(() =>
-                {
-                    if (SoundBoardItems == null)
-                        FilteredItems.Clear();
-                    FilteredItems.UpdateFrom(!string.IsNullOrEmpty(Filter) ? SoundBoardItems?.Where(d => d.Title.ToLower().Contains(Filter.ToLower()) || d.Category.ToLower().Contains(Filter.ToLower())).ToList() : SoundBoardItems?.ToList());
-                });
-            });
+            UpdateFilteredList();
         }
 
         #endregion
+    }
+
+    public enum ViewType
+    {
+        All,
+        Favorites
     }
 }

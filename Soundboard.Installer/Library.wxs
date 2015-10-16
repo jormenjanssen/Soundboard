@@ -165,6 +165,9 @@
         <File Id="Log4net_dll" Name="log4net.dll" Vital="yes"
              Source="$(var.RootDir)/SoundBoard.Wpf/bin/$(var.Build)/log4net.dll" Checksum="yes"
              KeyPath="no" ProcessorArchitecture="msil" />
+        <File Id="AutoMapper_dll" Name="AutoMapper.dll" Vital="yes"
+            Source="$(var.RootDir)/SoundBoard.Wpf/bin/$(var.Build)/AutoMapper.dll" Checksum="yes"
+            KeyPath="no" ProcessorArchitecture="msil" />
         <File Id="NHotkey_dll" Name="NHotkey.dll" Vital="yes"
           Source="$(var.RootDir)/SoundBoard.Wpf/bin/$(var.Build)/NHotkey.dll" Checksum="yes"
           KeyPath="no" ProcessorArchitecture="msil" />

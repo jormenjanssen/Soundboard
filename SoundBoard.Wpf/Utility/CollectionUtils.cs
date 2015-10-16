@@ -59,6 +59,11 @@
             return updateList.UpdateFrom<T, T>(source, DefaultCreateFunc, DefaultCompareFunc, null, addFunc, removeFunc);
         }
 
+        public static bool UpdateFrom<T>(this IList<T> updateList, IEnumerable<T> source, Func<T, T, bool> compareFunc)
+        {
+            return updateList.UpdateFrom<T, T>(source, DefaultCreateFunc, compareFunc, null, null, null);
+        }
+
         public static bool UpdateFrom<T>(this IList<T> updateList, IEnumerable<T> source, Action<T, T> updateFunc)
         {
             return updateList.UpdateFrom<T, T>(source, DefaultCreateFunc, DefaultCompareFunc, updateFunc, null, null);

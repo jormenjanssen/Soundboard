@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows;
 
 // General Information about an assembly is controlled through the following 
@@ -6,7 +7,7 @@ using System.Windows;
 // associated with an assembly.
 [assembly: AssemblyTitle("SoundBoard.Wpf")]
 [assembly: AssemblyProduct("SoundBoard.Wpf")]
-
+[assembly: Guid("DD839139-6B32-4E61-BCFD-C82CA8629B39")]
 //In order to begin building localizable applications, set 
 //<UICulture>CultureYouAreCodingWith</UICulture> in your .csproj file
 //inside a <PropertyGroup>.  For example, if you are using US english

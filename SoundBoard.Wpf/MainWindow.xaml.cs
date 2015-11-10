@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using AutoMapper;
 using PropertyChanged;
@@ -379,6 +380,22 @@ namespace SoundBoard.Wpf
         public void OnFilterChanged()
         {
             UpdateFilteredList();
+        }
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+            HwndSource source = PresentationSource.FromVisual(this) as HwndSource;
+            source?.AddHook(WndProc);
+        }
+
+        private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            if (msg == SingleInstance.WM_SHOWFIRSTINSTANCE)
+            {
+                Show();
+                WindowState = WindowState.Normal;
+            }
+            return IntPtr.Zero;
         }
 
         #endregion

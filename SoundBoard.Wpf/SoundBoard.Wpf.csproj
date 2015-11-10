@@ -39,6 +39,9 @@
   <PropertyGroup>
     <ApplicationIcon>speaker3.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>SoundBoard.Wpf.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AutoMapper, Version=4.0.4.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.4.0.4\lib\net45\AutoMapper.dll</HintPath>
@@ -91,10 +94,13 @@
       <DependentUpon>InputDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\SoundBoardItem.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Utility\BubbleScrollEvent.cs" />
     <Compile Include="Utility\CollectionUtils.cs" />
     <Compile Include="Utility\DelayedExecution.cs" />
     <Compile Include="Utility\Settings.cs" />
+    <Compile Include="Utility\SingleInstance.cs" />
+    <Compile Include="Utility\VirtualizedTilePanel.cs" />
     <Page Include="InputDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

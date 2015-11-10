@@ -5,6 +5,7 @@
         xmlns:cm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         xmlns:converter="clr-namespace:SoundBoard.Wpf.Converter"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        CacheMode="BitmapCache"
         xmlns:utility="clr-namespace:SoundBoard.Wpf.Utility"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="Riwo 2.0 Soundboard Client" Height="750" Width="1280">
